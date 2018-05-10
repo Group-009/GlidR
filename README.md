@@ -1,0 +1,2 @@
+# GlidR
+Gliding weather application
