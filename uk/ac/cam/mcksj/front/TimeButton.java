@@ -1,15 +1,23 @@
 package uk.ac.cam.mcksj.front;
 
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class TimeButton {
-    private Pane pane = new Pane();
+    private StackPane pane = new StackPane();
     private int  time;
 
-    public TimeButton(int time) {
+    public TimeButton(int time, int hour) {
+        Text text = new Text();
+        text.setFont(Font.font(20));
+        text.setText(time + ":00");
+
+        pane.getChildren().add(text);
         pane.setMinSize(480.0 / 7.0, 68.0);
-        pane.setStyle("-fx-background-color: #000");
-        if (time == 0) pane.setStyle("-fx-background-color: #FFF");
+        pane.setStyle("-fx-background-color: #"+ColourScheme.DARK_BROWN);
+        if (time == hour) pane.setStyle("-fx-background-color: #"+ColourScheme.LIGHT_BROWN);
 
         this.time = time;
     }

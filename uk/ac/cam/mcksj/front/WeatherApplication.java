@@ -2,6 +2,7 @@ package uk.ac.cam.mcksj.front;
 
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -13,34 +14,37 @@ import javafx.animation.KeyValue;
 import javafx.animation.KeyFrame;
 import javafx.util.Duration;
 
+import java.util.Calendar;
+
 public class WeatherApplication extends Application {
+
+    private Calendar calendar = Calendar.getInstance();
 
     private WeekdayButton[] weekdayPanes = new WeekdayButton[7];
     private int currentPane = 0;
 
     private TimeButton[] timePanes = new TimeButton[24];
-    private int currentTimePane = 0;
+    private int currentTimePane;
 
     private Scene mainScene;
     private Scene settingsScene;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
         //grid for days of the week
         GridPane dayGridPane = new GridPane();
         dayGridPane.setLayoutY(800-68);
 
         //add weekday buttons to weekday grid
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
         for (int i = 0; i<7; i++) {
-            WeekdayButton button = new WeekdayButton(i);
+            WeekdayButton button = new WeekdayButton(i, dayOfWeek);
             button.getPane().setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    weekdayPanes[currentPane].setColor("000");
-                    button.setColor("FFF");
+                    weekdayPanes[currentPane].setColor(ColourScheme.DARK_BROWN);
+                    button.setColor(ColourScheme.LIGHT_BROWN);
                     currentPane = button.getDay();
-
                 }
             });
             dayGridPane.add(button.getPane(),i,0);
@@ -58,8 +62,11 @@ public class WeatherApplication extends Application {
         GridPane timeGrid = new GridPane();
 
         //add panes to timeGrid with mouseClick event handlers to move the scrollPane
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        currentTimePane = hour;
+        System.out.println(hour);
         for (int i=0; i<24; i++) {
-            TimeButton time = new TimeButton(i);
+            TimeButton time = new TimeButton(i, hour);
             timeGrid.add(time.getPane(),i,0);
             timePanes[i] = time;
             time.getPane().setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -70,16 +77,21 @@ public class WeatherApplication extends Application {
                     final KeyFrame kf = new KeyFrame(Duration.millis(500), kv);
                     timeline.getKeyFrames().add(kf);
 
-                    //switch off current pane and switch on new pane
-                    timePanes[currentTimePane].setColor("000");
-                    time.setColor("FFF");
+                    time.setColor(ColourScheme.LIGHT_BROWN);
+                    timePanes[currentTimePane].setColor(ColourScheme.DARK_BROWN);
                     currentTimePane = time.getTime();
-
                     timeline.play();
                 }
             });
 
         }
+
+        //scroll to current hour
+        final Timeline timeline = new Timeline();
+        final KeyValue kv = new KeyValue(timeBarPane.hvalueProperty(), ((timePanes[hour].getTime()-3.0))*(1.0/17.0));
+        final KeyFrame kf = new KeyFrame(Duration.millis(500), kv);
+        timeline.getKeyFrames().add(kf);
+        timeline.play();
 
         timeBarPane.setContent(timeGrid);
         timeBarPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -113,14 +125,26 @@ public class WeatherApplication extends Application {
             }
         });
 
+        //Border Panes
+        Pane timeDayBorder = new Pane();
+        timeDayBorder.setLayoutX(0);
+        timeDayBorder.setLayoutY(800-69);
+        timeDayBorder.setPrefSize(480,2);
+        timeDayBorder.setStyle("-fx-background-color: #000");
 
+        //TREE BUILD
         //pane not root group so background can be set
         Pane root = new Pane();
         root.getChildren().add(dayGridPane);
         root.getChildren().add(quadGrid);
         root.getChildren().add(timeBarPane);
         root.getChildren().add(settingsPane);
-        root.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/scaleMockUp.png');");
+
+        Group borders = new Group();
+        borders.getChildren().add(timeDayBorder);
+        root.getChildren().add(borders);
+
+        //root.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/scaleMockUp.png');");
 
         //MAIN SCREEN
         mainScene = new Scene(root, 480, 800);
