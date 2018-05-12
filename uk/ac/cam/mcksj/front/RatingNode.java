@@ -23,7 +23,9 @@ public class RatingNode extends WeatherNode {
     public RatingNode(WeatherState state) {
         //Set up line for gauge needle.
         rating = 0;
-        line = new Line(180, 180, 0, 180);
+        this.setMinHeight(180);
+        this.setMaxHeight(180);
+        line = new Line(180, 172, 0, 180);
         line.setStrokeWidth(4);
         line.setStrokeType(StrokeType.OUTSIDE);
         line.setStrokeLineCap(StrokeLineCap.ROUND);
@@ -53,8 +55,8 @@ public class RatingNode extends WeatherNode {
                     double newRating;
                     if (larger) newRating = rating + delta;
                     else newRating = rating - delta;
-                    line.setEndX(180 * (1 - Math.cos(Math.PI * (newRating) / 5.0)));
-                    line.setEndY(180 * (1 - Math.sin(Math.PI * (newRating) / 5.0)));
+                    line.setEndX(160 * (1 - Math.cos(Math.PI * (newRating) / 5.0)) + 10);
+                    line.setEndY(160 * (1 - Math.sin(Math.PI * (newRating) / 5.0)) + 12);
                 }
             }
         };
@@ -68,14 +70,15 @@ public class RatingNode extends WeatherNode {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                double delta = (now - start) / 1000000.0;
+                double delta = (now - start) / 500000.0;
                 if (delta > 2 * Math.PI){
-                    line.setEndX(180 * (1 - Math.cos(Math.PI * (rating) / 5.0)));
-                    line.setEndY(180 * (1 - Math.sin(Math.PI * (rating) / 5.0)));
                     stop();
+                    line.setEndX(160 * (1 - Math.cos(Math.PI * (rating) / 5.0)) + 10);
+                    line.setEndY(160 * (1 - Math.sin(Math.PI * (rating) / 5.0)) + 12);
                 }
-                line.setEndX(180 * (1 - Math.cos(Math.PI * (rating) / 5.0 + Math.sin(delta) / 30.0)));
-                line.setEndY(180 * (1 - Math.sin(Math.PI * (rating) / 5.0 + Math.sin(delta) / 30.0)));
+                line.setEndX(160 * (1 - Math.cos(Math.PI * (rating) / 5.0 + Math.sin(delta) / 30.0)) + 10);
+                line.setEndY(160 * (1 - Math.sin(Math.PI * (rating) / 5.0 + Math.sin(delta) / 30.0)) + 12);
+
             }
 
         };

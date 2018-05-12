@@ -13,10 +13,16 @@ import javafx.animation.Timeline;
 import javafx.animation.KeyValue;
 import javafx.animation.KeyFrame;
 import javafx.util.Duration;
+import uk.ac.cam.mcksj.WeatherState;
+import uk.ac.cam.mcksj.WeekDay;
 
 import java.util.Calendar;
+import java.util.LinkedList;
 
 public class WeatherApplication extends Application {
+    private LinkedList<WeatherNode> weatherNodes = new LinkedList<>();
+    //TODO: don't define this here u donut
+    private WeatherState selectedWeather = new WeatherState(2,18,5, 0.12f,WeekDay.SATURDAY, 15);
 
     private Calendar calendar = Calendar.getInstance();
 
@@ -72,6 +78,10 @@ public class WeatherApplication extends Application {
             time.getPane().setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
+                    //TODO: update time
+                    selectedWeather = new WeatherState(5,30,5,0.12f,WeekDay.SATURDAY,10);
+                    updateNodes();
+
                     final Timeline timeline = new Timeline();
                     final KeyValue kv = new KeyValue(timeBarPane.hvalueProperty(), ((time.getTime()-3.0))*(1.0/17.0));
                     final KeyFrame kf = new KeyFrame(Duration.millis(500), kv);
@@ -103,13 +113,27 @@ public class WeatherApplication extends Application {
         quadGrid.setLayoutX(60);
         quadGrid.setLayoutY(124);
 
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 3; j++) {
-                Pane pane = new Pane();
-                pane.setMinSize(180,180);
-                quadGrid.add(pane, i, j);
-            }
-        }
+        //Insert weather nodes
+        WeatherNode rating = new RatingNode(selectedWeather);
+        quadGrid.add(rating, 0,0,2,1);
+        weatherNodes.add(rating);
+
+        WeatherNode temperature = new TemperatureNode(selectedWeather);
+        quadGrid.add(temperature, 0,1);
+        weatherNodes.add(temperature);
+
+        WeatherNode wind = new WindNode(selectedWeather);
+        quadGrid.add(wind, 0,2);
+        weatherNodes.add(wind);
+
+        WeatherNode rain = new RainNode(selectedWeather);
+        quadGrid.add(rain, 1,1);
+        weatherNodes.add(rain);
+
+        WeatherNode visibility = new VisibilityNode(selectedWeather);
+        quadGrid.add(visibility, 1,2);
+        weatherNodes.add(visibility);
+
 
         //pane for the settings icon
         Pane settingsPane = new Pane();
@@ -203,6 +227,12 @@ public class WeatherApplication extends Application {
         primaryStage.setResizable(false);
         primaryStage.setScene(mainScene);
         primaryStage.show();
+    }
+
+    public void updateNodes() {
+        for (WeatherNode node : weatherNodes) {
+            node.update(selectedWeather);
+        }
     }
 
     public static void main(String[] args) {
