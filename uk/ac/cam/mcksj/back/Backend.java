@@ -4,6 +4,7 @@ import uk.ac.cam.mcksj.Middle;
 import uk.ac.cam.mcksj.WeatherState;
 import uk.ac.cam.mcksj.WeekDay;
 
+
 public class Backend implements Middle {
 
     private static final double[][] RASP_TRANSFORMATION_MAT = new double[][]{
@@ -21,12 +22,16 @@ public class Backend implements Middle {
     Return true for successful update
      */
     public boolean updateWeather(){
+
         return true;
     }
 
     //time is an int ranging from 0-23 inclusive
     //Should return a WeatherState object which includes conditions for specified day/time
     public WeatherState getWeather(WeekDay day, int time){
+
+
+
         return null;
     }
 
