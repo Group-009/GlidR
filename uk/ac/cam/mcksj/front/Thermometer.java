@@ -59,7 +59,7 @@ public class Thermometer extends StackPane {
 
         //Change colour of line and circle in thermometer
         Color colour;
-        if (ratio<0.5) colour = Color.color(2 * ratio, ratio, 2-(2*ratio));
+        if (ratio<0.5) colour = Color.color(2 * ratio, ratio, 1-(2*ratio));
         else colour = Color.color(1, 1-ratio, 0);
 
         final KeyValue colLineKv = new KeyValue(line.strokeProperty(), colour);

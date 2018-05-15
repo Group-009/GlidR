@@ -80,7 +80,7 @@ public class HomePage {
                 public void handle(MouseEvent event) {
                     //TODO: update time by querying API with selectedTime and current Weekday
                     int selectedTime = time.getTime();
-                    selectedWeather = new WeatherState(5,30,5,0.12f, WeekDay.SATURDAY,10);
+                    selectedWeather = new WeatherState(5,100,5,0.12f, WeekDay.SATURDAY,10);
                     updateNodes();
 
                     final Timeline timeline = new Timeline();
