@@ -8,6 +8,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.animation.Timeline;
 import javafx.animation.KeyValue;
@@ -21,6 +23,7 @@ import java.util.LinkedList;
 
 public class WeatherApplication extends Application {
     private LinkedList<WeatherNode> weatherNodes = new LinkedList<>();
+
     //TODO: don't define this here u donut
     private WeatherState selectedWeather = new WeatherState(2,18,5, 0.12f,WeekDay.SATURDAY, 15);
 
@@ -48,9 +51,11 @@ public class WeatherApplication extends Application {
             button.getPane().setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
+                    //TODO update weather with API call using current time and button.getWeekDay() and update nodes
+
                     weekdayPanes[currentPane].setColor(ColourScheme.DARK_BROWN);
                     button.setColor(ColourScheme.LIGHT_BROWN);
-                    currentPane = button.getDay();
+                    currentPane = button.getBarIndex();
                 }
             });
             dayGridPane.add(button.getPane(),i,0);
@@ -70,7 +75,6 @@ public class WeatherApplication extends Application {
         //add panes to timeGrid with mouseClick event handlers to move the scrollPane
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         currentTimePane = hour;
-        System.out.println(hour);
         for (int i=0; i<24; i++) {
             TimeButton time = new TimeButton(i, hour);
             timeGrid.add(time.getPane(),i,0);
@@ -78,7 +82,8 @@ public class WeatherApplication extends Application {
             time.getPane().setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    //TODO: update time
+                    //TODO: update time by querying API with selectedTime and current Weekday
+                    int selectedTime = time.getTime();
                     selectedWeather = new WeatherState(5,30,5,0.12f,WeekDay.SATURDAY,10);
                     updateNodes();
 
@@ -89,7 +94,7 @@ public class WeatherApplication extends Application {
 
                     time.setColor(ColourScheme.LIGHT_BROWN);
                     timePanes[currentTimePane].setColor(ColourScheme.DARK_BROWN);
-                    currentTimePane = time.getTime();
+                    currentTimePane = selectedTime;
                     timeline.play();
                 }
             });
@@ -189,11 +194,24 @@ public class WeatherApplication extends Application {
             }
         });
 
-        //Text box
-        TextField textInput = new TextField();
-        textInput.setPrefWidth(100);
-        textInput.setLayoutX(240-textInput.getPrefWidth()/2.0);
-        textInput.setLayoutY(300);
+        //Latitude box
+        TextField latBox = new TextField();
+        latBox.setPrefWidth(50);
+        latBox.setLayoutX(240-latBox.getPrefWidth()-10);
+        latBox.setLayoutY(300);
+
+        //Longitude box
+        TextField longBox = new TextField();
+        longBox.setPrefWidth(50);
+        longBox.setLayoutX(240+10);
+        longBox.setLayoutY(300);
+
+        //Message box for confirmation
+        Text messageText = new Text();
+        messageText.setWrappingWidth(400);
+        messageText.setLayoutX(40);
+        messageText.setLayoutY(250);
+        messageText.setTextAlignment(TextAlignment.CENTER);
 
         //Set Location Button
         Pane locButton = new Pane();
@@ -204,8 +222,29 @@ public class WeatherApplication extends Application {
         locButton.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                System.out.println(textInput.getCharacters());
-                //TODO: UPDATE WEATHER INFORMATION - remember to sanitise input, provide confirmation of click, display current loc on main screen?
+                String latInput = latBox.getCharacters().toString();
+                String longInput = longBox.getCharacters().toString();
+
+
+                try {
+                    double latitude = Double.parseDouble(latInput);
+                    double longitude = Double.parseDouble(longInput);
+                    if (latitude < -90 || latitude > 90) throw new LocationFormatException("Latitude out of bounds");
+                    if (longitude < -180 || longitude > 180) throw new LocationFormatException("Longitude out of bounds");
+
+                    //TODO call API and handle false return
+                    messageText.setText("Location updated to: ("+latitude+", "+longitude+")");
+
+                } catch (NumberFormatException e) {
+                    messageText.setText("Please input two numbers, one for latitude and one for longitude");
+                    latBox.setText("");
+                    longBox.setText("");
+                } catch (LocationFormatException e) {
+                    messageText.setText("Please enter correct latitude and longitude: " + e.getMessage());
+                    latBox.setText("");
+                    longBox.setText("");
+                }
+
                 locButton.setStyle("-fx-background-color: #362");
             }
         });
@@ -218,8 +257,10 @@ public class WeatherApplication extends Application {
         });
 
         settingsRoot.getChildren().add(settingsClose);
-        settingsRoot.getChildren().add(textInput);
+        settingsRoot.getChildren().add(latBox);
+        settingsRoot.getChildren().add(longBox);
         settingsRoot.getChildren().add(locButton);
+        settingsRoot.getChildren().add(messageText);
         settingsScene = new Scene(settingsRoot, 480, 800);
 
         //stage setup
@@ -235,6 +276,7 @@ public class WeatherApplication extends Application {
         }
     }
 
+    //launch application
     public static void main(String[] args) {
         launch(args);
     }
