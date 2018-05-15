@@ -6,6 +6,8 @@ import uk.ac.cam.mcksj.WeekDay;
 
 public class Backend implements Middle {
 
+    private int latitude, longitude;
+
     /*
     This should take a location argument but I'm not sure
     what format location should be in
@@ -25,7 +27,34 @@ public class Backend implements Middle {
     //change location by specifying lat - long
     //returns true for successful location change
     public boolean changeLocation(int latitude, int longitude){
+        this.latitude = latitude;
+        this.longitude = longitude;
+
+        // TODO check if valid location
+
         return true;
+    }
+
+
+    private int getThermalUpdraft(WeekDay day, int time) {
+        return 0;
+    }
+
+    /*
+    Generates a URL for RASP
+    region - the day (don't ask me)
+    i - RASP's own 'x' coordinate
+    k - RASP's own 'y' coordinate
+    */
+    public static String generateRASPURL(String region, int i, int k) {
+        return "http://rasp.mrsap.org/cgi-bin/get_rasp_blipspot.cgi?region=" +
+                region +
+                "&grid=d2&day=0&i=" +
+                i +
+                "&k=" +
+                k +
+                "&width=2000&height=2000&linfo=0";
+
     }
 
 }
