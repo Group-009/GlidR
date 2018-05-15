@@ -1,6 +1,6 @@
 package uk.ac.cam.mcksj.front;
 
-import javafx.animation.AnimationTimer;
+import javafx.animation.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -11,6 +11,8 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
+import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 import uk.ac.cam.mcksj.WeatherState;
 
 import java.text.DecimalFormat;
@@ -19,17 +21,24 @@ import java.text.DecimalFormat;
 public class RatingNode extends WeatherNode {
     private Line line;
     private int rating;
+    Rotate rotation;
 
     public RatingNode(WeatherState state) {
         //Set up line for gauge needle.
         rating = 0;
         this.setMinHeight(180);
         this.setMaxHeight(180);
-        line = new Line(180, 172, 0, 180);
+        line = new Line(180, 172, 20, 172);
         line.setStrokeWidth(4);
         line.setStrokeType(StrokeType.OUTSIDE);
         line.setStrokeLineCap(StrokeLineCap.ROUND);
-        line.setOnMouseClicked(e -> wobble());
+
+        //Change rotation such that it pivots around the start of the line
+        rotation = new Rotate();
+        rotation.pivotXProperty().bind(line.startXProperty());
+        rotation.pivotYProperty().bind(line.startYProperty());
+        line.getTransforms().add(rotation);
+
         update(state);
 
         this.getChildren().add(line);
@@ -38,51 +47,10 @@ public class RatingNode extends WeatherNode {
     @Override
     public void update(WeatherState state) {
         //This function animates the needle to go to the next rating.
-        boolean larger = rating < state.getStarRating();
-        long start = System.nanoTime();
-        AnimationTimer timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                //Delta is the angle by which the needle is moved.
-                double delta = (now - start) / 1000000000.0;
-                //If needle in correct position, stop the function.
-                if ((larger && rating + delta > state.getStarRating()) |
-                        (!larger && rating - delta < state.getStarRating())) {
-                    rating = state.getStarRating();
-                    stop();
-                    System.out.println("STOPPING gauge animation");
-                } else {
-                    double newRating;
-                    if (larger) newRating = rating + delta;
-                    else newRating = rating - delta;
-                    line.setEndX(160 * (1 - Math.cos(Math.PI * (newRating) / 5.0)) + 10);
-                    line.setEndY(160 * (1 - Math.sin(Math.PI * (newRating) / 5.0)) + 12);
-                }
-            }
-        };
-        System.out.println("Stating gauge animation");
-        timer.start();
+        KeyValue kv = new KeyValue(rotation.angleProperty(), 180 / 5 * state.getStarRating(), Interpolator.EASE_BOTH);
+        final KeyFrame kf = new KeyFrame(Duration.millis(750), kv);
+        Timeline timeLine = new Timeline(kf);
+        timeLine.play();
+
     }
-
-    private void wobble(){
-        //Fun little feature for when you knock the gauge!
-        long start = System.nanoTime();
-        AnimationTimer timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                double delta = (now - start) / 500000.0;
-                if (delta > 2 * Math.PI){
-                    stop();
-                    line.setEndX(160 * (1 - Math.cos(Math.PI * (rating) / 5.0)) + 10);
-                    line.setEndY(160 * (1 - Math.sin(Math.PI * (rating) / 5.0)) + 12);
-                }
-                line.setEndX(160 * (1 - Math.cos(Math.PI * (rating) / 5.0 + Math.sin(delta) / 30.0)) + 10);
-                line.setEndY(160 * (1 - Math.sin(Math.PI * (rating) / 5.0 + Math.sin(delta) / 30.0)) + 12);
-
-            }
-
-        };
-        timer.start();
-    }
-
 }
