@@ -16,6 +16,7 @@ public class WeekdayButton {
 
     public WeekdayButton(int barIndex, int dayOfWeek) {
         this.barIndex = barIndex;
+        this.weekDay = weekDay;
         updateDayOfWeek(dayOfWeek);
 
         text.setFont(Font.font(30));
@@ -24,34 +25,6 @@ public class WeekdayButton {
 
         pane.setStyle("-fx-background-color: #"+ColourScheme.DARK_BROWN);
         if (barIndex == 0) pane.setStyle("-fx-background-color: #"+ColourScheme.LIGHT_BROWN);
-
-        //Set weekday Enum
-        switch((dayOfWeek+barIndex-1)%7+1) { //deal with 0-indexing issue
-            case 1:
-                weekDay = WeekDay.SUNDAY;
-                break;
-            case 2:
-                weekDay = WeekDay.MONDAY;
-                break;
-            case 3:
-                weekDay = WeekDay.TUESDAY;
-                break;
-            case 4:
-                weekDay = WeekDay.WEDNESDAY;
-                break;
-            case 5:
-                weekDay = WeekDay.THURSDAY;
-                break;
-            case 6:
-                weekDay = WeekDay.FRIDAY;
-                break;
-            case 7:
-                weekDay = WeekDay.SATURDAY;
-                break;
-            default:
-                weekDay = WeekDay.SUNDAY;
-
-        }
     }
 
     public void updateDayOfWeek(int dayOfWeek) {

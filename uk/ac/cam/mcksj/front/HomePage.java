@@ -36,7 +36,7 @@ public class HomePage {
     private Scene mainScene;
     private Scene settingsScene;
 
-    public HomePage(Stage primaryStage) {
+    public HomePage(Stage primaryStage, int currentHour, Calendar calendar) {
         //grid for days of the week
         GridPane dayGridPane = new GridPane();
         dayGridPane.setLayoutY(800-68);
@@ -70,10 +70,9 @@ public class HomePage {
         GridPane timeGrid = new GridPane();
 
         //add panes to timeGrid with mouseClick event handlers to move the scrollPane
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        currentTimePane = hour;
+        currentTimePane = currentHour;
         for (int i=0; i<24; i++) {
-            TimeButton time = new TimeButton(i, hour);
+            TimeButton time = new TimeButton(i, currentHour);
             timeGrid.add(time.getPane(),i,0);
             timePanes[i] = time;
             time.getPane().setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -100,7 +99,7 @@ public class HomePage {
 
         //scroll to current hour
         final Timeline timeline = new Timeline();
-        final KeyValue kv = new KeyValue(timeBarPane.hvalueProperty(), ((timePanes[hour].getTime()-3.0))*(1.0/17.0));
+        final KeyValue kv = new KeyValue(timeBarPane.hvalueProperty(), ((timePanes[currentHour].getTime()-3.0))*(1.0/17.0));
         final KeyFrame kf = new KeyFrame(Duration.millis(500), kv);
         timeline.getKeyFrames().add(kf);
         timeline.play();

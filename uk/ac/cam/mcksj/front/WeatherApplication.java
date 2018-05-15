@@ -15,6 +15,7 @@ import javafx.animation.Timeline;
 import javafx.animation.KeyValue;
 import javafx.animation.KeyFrame;
 import javafx.util.Duration;
+import uk.ac.cam.mcksj.Middle;
 import uk.ac.cam.mcksj.WeatherState;
 import uk.ac.cam.mcksj.WeekDay;
 
@@ -28,22 +29,65 @@ public class WeatherApplication extends Application {
     private Scene mainScene;
     private Scene settingsScene;
 
+    private Calendar calendar = Calendar.getInstance();
+
+    private Middle weatherInterface;
+    private WeatherState weatherState;
+
+    private WeekDay currentWeekDay;
+    private int currentTime;
+
+    private void updateDayTime() {
+        currentTime = calendar.get(Calendar.HOUR_OF_DAY);
+        switch (calendar.get(Calendar.DAY_OF_WEEK)) {
+            case 1:
+                currentWeekDay = WeekDay.SUNDAY;
+                break;
+            case 2:
+                currentWeekDay = WeekDay.MONDAY;
+                break;
+            case 3:
+                currentWeekDay = WeekDay.TUESDAY;
+                break;
+            case 4:
+                currentWeekDay = WeekDay.WEDNESDAY;
+                break;
+            case 5:
+                currentWeekDay = WeekDay.THURSDAY;
+                break;
+            case 6:
+                currentWeekDay = WeekDay.FRIDAY;
+                break;
+            case 7:
+                currentWeekDay = WeekDay.SATURDAY;
+                break;
+            default:
+                currentWeekDay = WeekDay.SUNDAY;
+        }
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
 
+        updateDayTime();
 
+        //TODO instantiate weatherInterface
+        //weatherState = weatherInterface.getWeather(currentWeekDay, currentTime);
+
+        //for debugging
         //root.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/scaleMockUp.png');");
 
         //Main screen
-        homePage = new HomePage(primaryStage);
+        homePage = new HomePage(primaryStage, currentTime, calendar);
         mainScene = homePage.getMainScene();
 
         //Settings screen
         settingsPage = new SettingsPage(primaryStage, mainScene);
         settingsScene = settingsPage.getSettingsScene();
 
+        //make the settings button work on the main screen
         homePage.setSettingsScene(settingsScene);
-        
+
         //stage setup
         primaryStage.setTitle("test");
         primaryStage.setResizable(false);
