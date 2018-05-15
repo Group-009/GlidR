@@ -53,7 +53,7 @@ public class SettingsPage {
         locButton.setPrefSize(68,68);
         locButton.setLayoutX(240-34);
         locButton.setLayoutY(360);
-        locButton.setStyle("-fx-background-color: #000");
+        locButton.setStyle("-fx-background-color: #"+ColourScheme.MIDDLE_GREY);
         locButton.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -80,14 +80,14 @@ public class SettingsPage {
                     longBox.setText("");
                 }
 
-                locButton.setStyle("-fx-background-color: #362");
+                locButton.setStyle("-fx-background-color: #"+ColourScheme.DARK_GREY);
             }
         });
 
         locButton.setOnMouseReleased(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                locButton.setStyle("-fx-background-color: #000");
+                locButton.setStyle("-fx-background-color: #"+ColourScheme.MIDDLE_GREY);
             }
         });
 
@@ -96,6 +96,7 @@ public class SettingsPage {
         settingsRoot.getChildren().add(longBox);
         settingsRoot.getChildren().add(locButton);
         settingsRoot.getChildren().add(messageText);
+        settingsRoot.setStyle("-fx-background-color: #"+ColourScheme.LIGHT_GREY);
         settingsScene = new Scene(settingsRoot, 480, 800);
     }
 

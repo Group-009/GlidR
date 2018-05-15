@@ -157,6 +157,12 @@ public class HomePage {
         timeDayBorder.setPrefSize(480,2);
         timeDayBorder.setStyle("-fx-background-color: #000");
 
+        Pane timeUpBorder = new Pane();
+        timeUpBorder.setLayoutX(0);
+        timeUpBorder.setLayoutY(800-69*2);
+        timeUpBorder.setPrefSize(480,2);
+        timeUpBorder.setStyle("-fx-background-color: #000");
+
         //TREE BUILD
         //pane not root group so background can be set
         Pane root = new Pane();
@@ -164,9 +170,11 @@ public class HomePage {
         root.getChildren().add(quadGrid);
         root.getChildren().add(timeBarPane);
         root.getChildren().add(settingsPane);
+        root.setStyle("-fx-background-color: #"+ColourScheme.LIGHT_GREY);
 
         Group borders = new Group();
         borders.getChildren().add(timeDayBorder);
+        borders.getChildren().add(timeUpBorder);
         root.getChildren().add(borders);
 
         mainScene = new Scene(root, 480, 800);
