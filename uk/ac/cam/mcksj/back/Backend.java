@@ -7,12 +7,20 @@ import uk.ac.cam.mcksj.WeekDay;
 
 public class Backend implements Middle {
 
+    public static final int MIN_SUPPORTED_TIME = 6,
+                            MAX_SUPPORTED_TIME = 18;
+
     private int latitude, longitude;
 
+    // Indexed first by day, then by time (note time=0..5 are null)
+    private WeatherState[][] weatherCache;
+
     private RaspAPI rasp;
-    
+
     public Backend() {
         rasp = new RaspAPI();
+        weatherCache = new WeatherState[7][MAX_SUPPORTED_TIME + 1];
+        updateWeather();
     }
 
     /*
@@ -21,21 +29,30 @@ public class Backend implements Middle {
     Return true for successful update
      */
     public boolean updateWeather(){
+        for(int dIndex = 0; dIndex < 7; dIndex++) {
+            for(int time = 6; time <= MAX_SUPPORTED_TIME; time++) {
+                WeekDay day = WeekDay.values()[dIndex];
 
+                // TODO
+                float temperature = 0;
+                float visibility = 0;
+                float rain = 0;
+
+                int starRating = 0;
+                //
+
+                weatherCache[dIndex][time] = new WeatherState(starRating, temperature, visibility, rain, day, time);
+            }
+        }
         return true;
     }
 
     //time is an int ranging from 0-23 inclusive
     //Should return a WeatherState object which includes conditions for specified day/time
     public WeatherState getWeather(WeekDay day, int time){
-        // TODO
-        float temperature = 0;
-        float visibility = 0;
-        float rain = 0;
-
-        int starRating = 0;
-
-        return new WeatherState(starRating, temperature, visibility, rain, day, time);
+        if(time < MIN_SUPPORTED_TIME || time > MAX_SUPPORTED_TIME)
+            throw new IllegalArgumentException("Time " + time + " is not supported");
+        return weatherCache[day.index][time];
     }
 
 
@@ -45,7 +62,7 @@ public class Backend implements Middle {
         this.latitude = latitude;
         this.longitude = longitude;
 
-        if(!rasp.setRaspIK(latitude, longitude))
+        if(!rasp.setIK(latitude, longitude))
             return false;
 
         return true;

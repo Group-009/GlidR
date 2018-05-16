@@ -34,7 +34,7 @@ public class RaspAPI {
      * @param lon longitude
      * @return Whether the co-ordinates are valid
      */
-    public boolean setRaspIK(double lat, double lon) {
+    public boolean setIK(double lat, double lon) {
         int i = (int) (lat * TRANSFORM_MAT[0][0] + lon * TRANSFORM_MAT[0][1] + 1 * TRANSFORM_MAT[0][2]);
         int k = (int) (lat * TRANSFORM_MAT[1][0] + lon * TRANSFORM_MAT[1][1] + 1 * TRANSFORM_MAT[1][2]);
         return (i >= 0) && (i <= 2000) && (k >= 0) && (k <= 2000);
