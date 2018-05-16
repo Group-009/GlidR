@@ -1,4 +1,4 @@
-package uk.ac.cam.mcksj.uk.ac.cam.mcksj.tests;
+package uk.ac.cam.mcksj.tests;
 
 public class RASPMatrix {
 
@@ -37,9 +37,12 @@ public class RASPMatrix {
         k = lat * A_inverse[1][0] + lon * A_inverse[1][1] + A_inverse[1][2];
         double t = A_inverse[2][2];
 
-        System.out.println(i);
-        System.out.println(k);
-        System.out.println(t);
+        for(int i1 = 0; i1 < 3; i1++) {
+            for(int i2 = 0; i2 < 3; i2++) {
+                System.out.print(A_inverse[i1][i2] + ", ");
+            }
+            System.out.println();
+        }
 
     }
 
