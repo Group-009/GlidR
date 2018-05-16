@@ -24,7 +24,7 @@ public class RaspAPI {
 
     public static void main(String[] args) throws IOException {
         RaspAPI api = new RaspAPI();
-        for(int j = 12; j <= 36; j++)
+        for(int j = 6; j <= 18; j++)
             System.out.println(api.getThermalUpdraft(WeekDay.FRIDAY, j));
     }
 
@@ -32,20 +32,22 @@ public class RaspAPI {
      *
      * @param lat latitude
      * @param lon longitude
+     * @return Whether the co-ordinates are valid
      */
-    public void setRaspIK(double lat, double lon) {
+    public boolean setRaspIK(double lat, double lon) {
         int i = (int) (lat * TRANSFORM_MAT[0][0] + lon * TRANSFORM_MAT[0][1] + 1 * TRANSFORM_MAT[0][2]);
         int k = (int) (lat * TRANSFORM_MAT[1][0] + lon * TRANSFORM_MAT[1][1] + 1 * TRANSFORM_MAT[1][2]);
+        return (i >= 0) && (i <= 2000) && (k >= 0) && (k <= 2000);
     }
 
     /**
      *
      * @param day The day that we want the data for
-     * @param time The time in half-hours (between 06:00 and 18:00 inclusive)
+     * @param time The time in hours (between 06:00 and 18:00 inclusive)
      * @return The thermal updraft for that time and day in //TODO
      */
     public int getThermalUpdraft(WeekDay day, int time) throws IOException {
-        if(time < 12 || time > 36)
+        if(time < 6 || time > 18)
             throw new IllegalArgumentException("time " + time + " is not supported by RASP.  "
             + "Please use the range 06:00-18:00");
 
@@ -69,14 +71,14 @@ public class RaspAPI {
     /**
      *
      * @param data Line of thermal data
-     * @param time Time in half-hours
+     * @param time Time in hours
      * @return The thermal data
      */
     private int parseThermalData(String data, int time) {
         String[] comps = data.split(" ");
         // Data starts at 06:00, so normalise time to this
         // First two components are padding
-        int nTime = time - 12 + 2;
+        int nTime = 2 * (time - 6) + 2;
         return Integer.valueOf(comps[nTime]);
     }
 

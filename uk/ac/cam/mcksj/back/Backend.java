@@ -9,6 +9,12 @@ public class Backend implements Middle {
 
     private int latitude, longitude;
 
+    private RaspAPI rasp;
+    
+    public Backend() {
+        rasp = new RaspAPI();
+    }
+
     /*
     This should take a location argument but I'm not sure
     what format location should be in
@@ -22,10 +28,14 @@ public class Backend implements Middle {
     //time is an int ranging from 0-23 inclusive
     //Should return a WeatherState object which includes conditions for specified day/time
     public WeatherState getWeather(WeekDay day, int time){
+        // TODO
+        float temperature = 0;
+        float visibility = 0;
+        float rain = 0;
 
+        int starRating = 0;
 
-
-        return null;
+        return new WeatherState(starRating, temperature, visibility, rain, day, time);
     }
 
 
@@ -35,7 +45,8 @@ public class Backend implements Middle {
         this.latitude = latitude;
         this.longitude = longitude;
 
-        // TODO check if valid location
+        if(!rasp.setRaspIK(latitude, longitude))
+            return false;
 
         return true;
     }
