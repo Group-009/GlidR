@@ -1,5 +1,7 @@
 package uk.ac.cam.mcksj;
 
+import java.io.IOException;
+
 public interface Middle {
 
     /*
@@ -7,7 +9,7 @@ public interface Middle {
     what format location should be in
     Return true for successful update
      */
-    public boolean updateWeather();
+    public boolean updateWeather() throws IOException;
 
     //time is an int ranging from 0-23 inclusive
     //Should return a WeatherState object which includes conditions for specified day/time

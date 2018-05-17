@@ -42,7 +42,7 @@ public class OpenWeatherMapAPI {
     }
 
     public static void main(String[] args){
-        Backend back = new Backend();
-        back.updateWeather();
+//        Backend back = new Backend();
+//        back.updateWeather();
     }
 }

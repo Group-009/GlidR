@@ -4,11 +4,16 @@ import uk.ac.cam.mcksj.Middle;
 import uk.ac.cam.mcksj.WeatherState;
 import uk.ac.cam.mcksj.WeekDay;
 
+import java.io.IOException;
+
 
 public class Backend implements Middle {
 
-    public static final int MIN_SUPPORTED_TIME = 6,
-                            MAX_SUPPORTED_TIME = 18;
+    public static void main(String[] args) throws IOException {
+        Backend back = new Backend();
+        System.out.println(back.getWeather(WeekDay.THURSDAY, 12).getStarRating());
+    }
+
 
     private int latitude, longitude;
 
@@ -17,9 +22,9 @@ public class Backend implements Middle {
 
     private RaspAPI rasp;
 
-    public Backend() {
-        rasp = new RaspAPI();
-        weatherCache = new WeatherState[7][MAX_SUPPORTED_TIME + 1];
+    public Backend() throws IOException {
+        rasp = new RaspAPI(52, 0);
+        weatherCache = new WeatherState[7][24];
         updateWeather();
     }
 
@@ -28,9 +33,10 @@ public class Backend implements Middle {
     what format location should be in
     Return true for successful update
      */
-    public boolean updateWeather(){
+    public boolean updateWeather() throws IOException {
+        rasp.updateThermalData();
         for(int dIndex = 0; dIndex < 7; dIndex++) {
-            for(int time = 6; time <= MAX_SUPPORTED_TIME; time++) {
+            for(int time = 0; time <= 23; time++) {
                 WeekDay day = WeekDay.values()[dIndex];
 
                 // TODO
@@ -38,7 +44,7 @@ public class Backend implements Middle {
                 float visibility = 0;
                 float rain = 0;
 
-                int starRating = 0;
+                int starRating = rasp.getThermalUpdraft(WeekDay.values()[dIndex], time);
                 //
 
                 weatherCache[dIndex][time] = new WeatherState(starRating, temperature, visibility, rain, day, time);
@@ -50,7 +56,7 @@ public class Backend implements Middle {
     //time is an int ranging from 0-23 inclusive
     //Should return a WeatherState object which includes conditions for specified day/time
     public WeatherState getWeather(WeekDay day, int time){
-        if(time < MIN_SUPPORTED_TIME || time > MAX_SUPPORTED_TIME)
+        if(time < 0 || time >= 24)
             throw new IllegalArgumentException("Time " + time + " is not supported");
         return weatherCache[day.index][time];
     }
@@ -69,7 +75,5 @@ public class Backend implements Middle {
 
         return true;
     }
-
-
 
 }
