@@ -12,13 +12,17 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import uk.ac.cam.mcksj.Middle;
 import uk.ac.cam.mcksj.WeatherState;
 import uk.ac.cam.mcksj.WeekDay;
+import uk.ac.cam.mcksj.back.Backend;
 
 import java.util.Calendar;
 import java.util.LinkedList;
 
 public class HomePage {
+
+    private double backgroundChangeThreshold = 0.5;
 
     private LinkedList<WeatherNode> weatherNodes = new LinkedList<>();
 
@@ -38,7 +42,7 @@ public class HomePage {
 
 
 
-    public HomePage(Stage primaryStage, int currentHour, Calendar calendar) {
+    public HomePage(Stage primaryStage, int currentHour, Calendar calendar, Middle weatherinterface) {
         //grid for days of the week
         GridPane dayGridPane = new GridPane();
         dayGridPane.setLayoutY(800-68);
@@ -173,7 +177,11 @@ public class HomePage {
         root.getChildren().add(timeBarPane);
         root.getChildren().add(settingsPane);
         //root.setStyle("-fx-background-color: #"+ColourScheme.LIGHT_GREY);
-        root.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/background.png');");
+        if (selectedWeather.getRain() > backgroundChangeThreshold){
+            root.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/background_storm.png');");
+        } else {
+            root.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/background_sunny.png');");
+        }
 
         Group borders = new Group();
         borders.getChildren().add(timeDayBorder);
