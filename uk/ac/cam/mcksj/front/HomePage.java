@@ -40,11 +40,11 @@ public class HomePage {
     private Scene mainScene;
     private Scene settingsScene;
 
-    private Middle weatherInteface;
+    private Middle weatherInterface;
     private WeatherState focusState;
 
     public HomePage(Stage primaryStage, int currentHour, Calendar calendar, Middle weatherInterface) {
-        this.weatherInteface = weatherInterface;
+        this.weatherInterface = weatherInterface;
 
         focusState = weatherInterface.getWeather(0,currentHour);
         //grid for days of the week
@@ -72,15 +72,15 @@ public class HomePage {
                         }
                         timePanes[currentTimePane].setColor(ColourScheme.LIGHT_GREY);
                     } else if (currentDayPane != 0 && button.getBarIndex() == 0) {
-                        //colour grey
+                        //colour grey for unselectable times
                         for (int i = 0; i < currentHour; i++) {
-                            timePanes[i].setColor(ColourScheme.MIDDLE_GREY);
+                            timePanes[i].setColor(ColourScheme.DARK_GREY);
                         }
 
                         //select least valid time
                         if (currentTimePane < currentHour) currentTimePane = currentHour;
-                        focusState = weatherInterface.getWeather(currentDayPane, currentHour);
-                        timePanes[currentHour].setColor(ColourScheme.LIGHT_GREY);
+                        focusState = weatherInterface.getWeather(currentDayPane, currentTimePane);
+                        timePanes[currentTimePane].setColor(ColourScheme.LIGHT_GREY);
                         updateNodes();
                     }
 
@@ -223,6 +223,17 @@ public class HomePage {
         mainScene.getStylesheets().add("uk/ac/cam/mcksj/front/styles.css");
 
         updatePage();
+
+        //colour grey unselectable times
+        for (int i = 0; i < currentHour; i++) {
+            timePanes[i].setColor(ColourScheme.DARK_GREY);
+        }
+
+        //select least valid time
+        if (currentTimePane < currentHour) currentTimePane = currentHour;
+        focusState = weatherInterface.getWeather(currentDayPane, currentTimePane);
+        timePanes[currentTimePane].setColor(ColourScheme.LIGHT_GREY);
+        updateNodes();
     }
 
     public void updateNodes() {
