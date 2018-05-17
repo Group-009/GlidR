@@ -13,9 +13,9 @@ public interface Middle {
 
     //time is an int ranging from 0-23 inclusive
     //Should return a WeatherState object which includes conditions for specified day/time
-    public WeatherState getWeather(WeekDay day, int time);
+    public WeatherState getWeather(int day, int time);
 
     //change location by specifying lat - long
     //returns true for successful location change
-    public boolean changeLocation(int latitude, int longitude);
+    public boolean changeLocation(double latitude, double longitude);
 }

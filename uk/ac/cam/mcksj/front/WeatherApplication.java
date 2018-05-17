@@ -18,6 +18,7 @@ import javafx.util.Duration;
 import uk.ac.cam.mcksj.Middle;
 import uk.ac.cam.mcksj.WeatherState;
 import uk.ac.cam.mcksj.WeekDay;
+import uk.ac.cam.mcksj.back.Backend;
 
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -32,13 +33,14 @@ public class WeatherApplication extends Application {
     private Calendar calendar = Calendar.getInstance();
 
     private Middle weatherInterface;
-    private WeatherState weatherState;
 
     private WeekDay currentWeekDay;
+    private int currentDayIndex;
     private int currentTime;
 
     private void updateDayTime() {
         currentTime = calendar.get(Calendar.HOUR_OF_DAY);
+        currentDayIndex = (calendar.get(Calendar.DAY_OF_WEEK)+5)%7;
         switch (calendar.get(Calendar.DAY_OF_WEEK)) {
             case 1:
                 currentWeekDay = WeekDay.SUNDAY;
@@ -71,14 +73,18 @@ public class WeatherApplication extends Application {
 
         updateDayTime();
 
-        //TODO instantiate weatherInterface
-        //weatherState = weatherInterface.getWeather(currentWeekDay, currentTime);
+        //instantiate weatherInterface
+        weatherInterface = new Backend();
 
-        //for debugging
+        //TODO lat and long in constructor
+        //Location for Cambridge - in real app would use GPS module
+        weatherInterface.changeLocation(52.208816, 0.117754);
+
+        //for debugging using background measurements image
         //root.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/scaleMockUp.png');");
 
         //Main screen
-        homePage = new HomePage(primaryStage, currentTime, calendar);
+        homePage = new HomePage(primaryStage, currentTime, calendar,weatherInterface);
         mainScene = homePage.getMainScene();
 
         //Settings screen
