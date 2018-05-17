@@ -10,20 +10,20 @@ import java.io.IOException;
 public class Backend implements Middle {
 
     public static void main(String[] args) throws IOException, NoWeatherDataException {
-        Backend back = new Backend();
+        Backend back = new Backend(52, 0);
         System.out.println(back.getWeather(0, 12).getStarRating());
     }
 
 
     private int latitude, longitude;
 
-    // Indexed first by day, then by time (note time=0..5 are null)
+    // Indexed first by day, then by time
     private WeatherState[][] weatherCache;
 
     private RaspAPI rasp;
 
-    public Backend() throws IOException, NoWeatherDataException {
-        rasp = new RaspAPI(52, 0);
+    public Backend(double lat, double lon) throws IOException, NoWeatherDataException {
+        rasp = new RaspAPI(lat, lon);
         weatherCache = new WeatherState[7][24];
         updateWeather();
     }

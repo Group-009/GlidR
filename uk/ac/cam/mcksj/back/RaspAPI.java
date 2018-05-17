@@ -109,9 +109,9 @@ public class RaspAPI {
     private int parseThermalData(String data, int time) throws NoWeatherDataException {
         try {
             String[] comps = data.split(" ");
-            // Data starts at 06:00, so normalise time to this
+            // Data starts at 06:00 (hence -6)
             // First two components are padding (hence + 2)
-            // Data is every half hour (hence * 2) as our application only has hourly
+            // Data is every half hour but our application only has hourly (hence * 2)
             int nTime = 2 * (time - 6) + 2;
             return Integer.valueOf(comps[nTime]);
         }
