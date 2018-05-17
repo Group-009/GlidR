@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeType;
@@ -23,7 +24,7 @@ import static javafx.scene.layout.BackgroundRepeat.NO_REPEAT;
 public class RatingNode extends WeatherNode {
     private Line line;
     private int rating;
-    private Image gauge = new Image("uk/ac/cam/mcksj/img/gaugeBackground.png");
+    private Image backgroundImage = new Image("uk/ac/cam/mcksj/img/gaugeBackground.png");
     Rotate rotation;
 
     public RatingNode(WeatherState state) {
@@ -31,10 +32,11 @@ public class RatingNode extends WeatherNode {
         rating = 0;
         this.setMinHeight(180);
         this.setMaxHeight(180);
-        line = new Line(180, 172, 20, 172);
+        line = new Line(180, 162, 50, 162);
         line.setStrokeWidth(4);
         line.setStrokeType(StrokeType.OUTSIDE);
         line.setStrokeLineCap(StrokeLineCap.ROUND);
+        line.setStroke(Color.WHITE);
 
         //Change rotation such that it pivots around the start of the line
         rotation = new Rotate();
@@ -44,7 +46,7 @@ public class RatingNode extends WeatherNode {
 
         update(state);
 
-        this.setBackground(new Background(new BackgroundImage(gauge, NO_REPEAT, NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+        this.setBackground(new Background(new BackgroundImage(backgroundImage, NO_REPEAT, NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 
         this.getChildren().add(line);
     }

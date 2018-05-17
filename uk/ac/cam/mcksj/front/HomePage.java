@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -35,6 +36,8 @@ public class HomePage {
 
     private Scene mainScene;
     private Scene settingsScene;
+
+
 
     public HomePage(Stage primaryStage, int currentHour, Calendar calendar) {
         //grid for days of the week
