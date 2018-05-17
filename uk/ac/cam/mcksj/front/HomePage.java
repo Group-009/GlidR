@@ -175,7 +175,8 @@ public class HomePage {
         root.getChildren().add(quadGrid);
         root.getChildren().add(timeBarPane);
         root.getChildren().add(settingsPane);
-        root.setStyle("-fx-background-color: #"+ColourScheme.LIGHT_GREY);
+        //root.setStyle("-fx-background-color: #"+ColourScheme.LIGHT_GREY);
+        root.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/background.png');");
 
         Group borders = new Group();
         borders.getChildren().add(timeDayBorder);
