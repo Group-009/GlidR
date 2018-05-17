@@ -24,14 +24,19 @@ import static javafx.scene.layout.BackgroundRepeat.NO_REPEAT;
 public class RatingNode extends WeatherNode {
     private Line line;
     private int rating;
-    Rotate rotation;
+    private Rotate rotation;
 
     public RatingNode(WeatherState state) {
+        //Setup gauge background
+        BackgroundImage bg = new BackgroundImage(new Image("uk/ac/cam/mcksj/img/gaugeBackground.png"),  NO_REPEAT,
+                NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        this.setBackground(new Background(bg));
+
         //Set up line for gauge needle.
         rating = 0;
         this.setMinHeight(180);
         this.setMaxHeight(180);
-        line = new Line(180, 162, 50, 162);
+        line = new Line(180, 160, 50, 144);
         line.setStrokeWidth(4);
         line.setStrokeType(StrokeType.OUTSIDE);
         line.setStrokeLineCap(StrokeLineCap.ROUND);
@@ -44,11 +49,7 @@ public class RatingNode extends WeatherNode {
         line.getTransforms().add(rotation);
 
         update(state);
-        //backgound image
-        BackgroundImage bg = new BackgroundImage(new Image("uk/ac/cam/mcksj/img/gaugeBackground.png"),
-                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
-                BackgroundSize.DEFAULT);
-        this.setBackground(new Background(bg));
+
 
         this.getChildren().add(line);
     }
@@ -56,7 +57,7 @@ public class RatingNode extends WeatherNode {
     @Override
     public void update(WeatherState state) {
         //This function animates the needle to go to the next rating.
-        KeyValue kv = new KeyValue(rotation.angleProperty(), 180 / 5 * state.getStarRating(), Interpolator.EASE_BOTH);
+        KeyValue kv = new KeyValue(rotation.angleProperty(), 173 / 5 * state.getStarRating(), Interpolator.EASE_BOTH);
         final KeyFrame kf = new KeyFrame(Duration.millis(750), kv);
         Timeline timeLine = new Timeline(kf);
         timeLine.play();
