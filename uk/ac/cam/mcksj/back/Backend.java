@@ -37,6 +37,8 @@ public class Backend implements Middle {
 
         // TODO check if valid location
 
+        WeatherState currWeatherState = new WeatherState(0,0,0,0,WeekDay.MONDAY,0);
+
         return true;
     }
 
