@@ -5,6 +5,7 @@ import uk.ac.cam.mcksj.WeatherState;
 import uk.ac.cam.mcksj.WeekDay;
 
 import java.io.IOException;
+import java.util.Random;
 
 
 public class Backend implements Middle {
@@ -35,12 +36,14 @@ public class Backend implements Middle {
                 WeekDay day = WeekDay.values()[dIndex];
 
                 // TODO
-                float temperature = 0;
-                float visibility = 0;
-                float rain = 0;
+                Random random = new Random();
+
+                float temperature = random.nextFloat()*40;
+                float visibility = random.nextFloat();
+                float rain = random.nextFloat();
 
                 //int starRating = rasp.getThermalUpdraft(WeekDay.values()[dIndex], time);
-                int starRating = 0;
+                int starRating = random.nextInt(6);
 
                 weatherCache[dIndex][time] = new WeatherState(starRating, temperature, visibility, rain, day, time);
             }
