@@ -8,6 +8,7 @@ import javafx.scene.text.Text;
 public class TimeButton {
     private StackPane pane = new StackPane();
     private int  time;
+    private boolean validTime = true;
 
     public TimeButton(int time, int hour) {
         Text text = new Text();
@@ -28,6 +29,14 @@ public class TimeButton {
 
     public int getTime() {
         return time;
+    }
+
+    public void setValid(boolean valid) {
+        validTime = valid;
+    }
+
+    public boolean isValidTime() {
+        return validTime;
     }
 
     public void setColor(String hex) {
