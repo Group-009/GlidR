@@ -50,7 +50,7 @@ public class RaspAPI {
      */
 
     public void updateThermalData() throws IOException {
-        for(int day = 0; day < 7; day++) {
+        /*for(int day = 0; day < 7; day++) {
             String dayStr = WeekDay.values()[day].toString().toLowerCase();
             dayStr = dayStr.substring(0, 1).toUpperCase() + dayStr.substring(1);
             BufferedInputStream in = null;
@@ -68,7 +68,7 @@ public class RaspAPI {
                     in.close();
             }
 
-        }
+        }*/
     }
 
     /**
