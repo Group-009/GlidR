@@ -5,8 +5,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import uk.ac.cam.mcksj.WeatherState;
 
@@ -19,9 +19,14 @@ public class WindNode extends WeatherNode {
     private Image wind = new Image("uk/ac/cam/mcksj/img/wind.png");
 
     public WindNode(WeatherState state) {
-        //setup the text and image, and lay them out vertically
+        //setup the background, text and image, and lay them out vertically
+        BackgroundImage bg = new BackgroundImage(new Image("uk/ac/cam/mcksj/img/nodeBackground.png"),
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT);
+        this.setBackground(new Background(bg));
         text = new Label();
         text.setFont(new Font("Arial Black", 20));
+        text.setTextFill(Color.WHITE);
         img = new ImageView(wind);
         img.setFitWidth(100);
         img.setPreserveRatio(true);

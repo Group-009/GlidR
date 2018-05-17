@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeType;
@@ -31,10 +32,11 @@ public class RatingNode extends WeatherNode {
         rating = 0;
         this.setMinHeight(180);
         this.setMaxHeight(180);
-        line = new Line(180, 172, 20, 172);
+        line = new Line(180, 160, 50, 160);
         line.setStrokeWidth(4);
         line.setStrokeType(StrokeType.OUTSIDE);
         line.setStrokeLineCap(StrokeLineCap.ROUND);
+        line.setStroke(Color.WHITE);
 
         //Change rotation such that it pivots around the start of the line
         rotation = new Rotate();

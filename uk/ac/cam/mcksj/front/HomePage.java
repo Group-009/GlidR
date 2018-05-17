@@ -7,9 +7,9 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import uk.ac.cam.mcksj.Middle;
@@ -115,7 +115,7 @@ public class HomePage {
 
         //middle grid of weather conditions
         GridPane quadGrid = new GridPane();
-        quadGrid.setGridLinesVisible(true);
+        //quadGrid.setGridLinesVisible(true);
         quadGrid.setLayoutX(60);
         quadGrid.setLayoutY(124);
 
@@ -185,6 +185,7 @@ public class HomePage {
 
         mainScene = new Scene(root, 480, 800);
         mainScene.getStylesheets().add("uk/ac/cam/mcksj/front/styles.css");
+
     }
 
     public void updateNodes() {

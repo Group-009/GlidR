@@ -5,7 +5,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import uk.ac.cam.mcksj.WeatherState;
@@ -16,10 +17,15 @@ public class TemperatureNode extends WeatherNode {
     private Thermometer thermometer;
 
     public TemperatureNode(WeatherState state) {
-        //Set up thermometer and text
+        //Set up background, thermometer and text
+        BackgroundImage bg = new BackgroundImage(new Image("uk/ac/cam/mcksj/img/nodeBackground.png"),
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT);
+        this.setBackground(new Background(bg));
         thermometer = new Thermometer();
         text = new Label();
         text.setFont(new Font("Arial Black", 40));
+        text.setTextFill(Color.WHITE);
         update(state);
 
         HBox box = new HBox();
