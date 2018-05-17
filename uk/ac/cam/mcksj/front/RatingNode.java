@@ -6,7 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeType;
@@ -17,10 +17,13 @@ import uk.ac.cam.mcksj.WeatherState;
 
 import java.text.DecimalFormat;
 
+import static javafx.scene.layout.BackgroundRepeat.NO_REPEAT;
+
 
 public class RatingNode extends WeatherNode {
     private Line line;
     private int rating;
+    private Image gauge = new Image("uk/ac/cam/mcksj/img/gaugeBackground.png");
     Rotate rotation;
 
     public RatingNode(WeatherState state) {
@@ -40,6 +43,8 @@ public class RatingNode extends WeatherNode {
         line.getTransforms().add(rotation);
 
         update(state);
+
+        this.setBackground(new Background(new BackgroundImage(gauge, NO_REPEAT, NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
 
         this.getChildren().add(line);
     }
