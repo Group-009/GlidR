@@ -57,21 +57,30 @@ public class RaspAPI {
 
     public void updateThermalData() throws IOException, NoWeatherDataException {
         for(int day = 0; day < 5; day++) {
+            // We start counting from today, so increment day appropriately
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DAY_OF_MONTH, day);
+
+            // Convert int from [1..7] to string representation
             String dayStr = WeekDay.values()[calendar.get(Calendar.DAY_OF_WEEK) - 1].toString().toLowerCase();
             dayStr = dayStr.substring(0, 1).toUpperCase() + dayStr.substring(1);
+
             BufferedInputStream in = null;
             try {
+                // Read in the data for the day
                 in = new BufferedInputStream(new URL(generateRASPURL(dayStr)).openStream());
                 byte[] dataRaw = in.readAllBytes();
+
                 String data = new String(dataRaw, StandardCharsets.UTF_8);
                 String thermalData = data.split("\n")[0];
+
+                // Individually read in the data at each hour
                 for(int time = 6; time <= 18; time++) {
                     thermalSpeedCache[day][time] = parseThermalData(thermalData, time);
                 }
             }
             finally {
+                // Close the input stream
                 if(in != null)
                     in.close();
             }
@@ -101,7 +110,8 @@ public class RaspAPI {
         try {
             String[] comps = data.split(" ");
             // Data starts at 06:00, so normalise time to this
-            // First two components are padding
+            // First two components are padding (hence + 2)
+            // Data is every half hour (hence * 2) as our application only has hourly
             int nTime = 2 * (time - 6) + 2;
             return Integer.valueOf(comps[nTime]);
         }

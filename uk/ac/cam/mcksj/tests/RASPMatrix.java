@@ -3,6 +3,9 @@ package uk.ac.cam.mcksj.tests;
 public class RASPMatrix {
 
     public static void main(String[] args) {
+        // a,b,c,d,e,f determined by supplying (i,j) of (0,0), (2000, 0), (0, 2000)
+        // and then logically inferring the matrix
+        // Note that i-k --> lat-lon is not linear, so we add a 3rd dimension to allow translation
         double c = 57.58381;
         double f = -16.61837;
 
