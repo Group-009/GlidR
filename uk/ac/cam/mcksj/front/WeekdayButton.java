@@ -21,7 +21,7 @@ public class WeekdayButton {
 
         text.setFont(Font.font(30));
         pane.getChildren().add(text);
-        pane.setMinSize(480.0 / 7.0, 68);
+        pane.setMinSize(480.0 / 6.0, 68);
 
         pane.setStyle("-fx-background-color: #"+ColourScheme.DARK_BROWN);
         if (barIndex == 0) pane.setStyle("-fx-background-color: #"+ColourScheme.LIGHT_BROWN);

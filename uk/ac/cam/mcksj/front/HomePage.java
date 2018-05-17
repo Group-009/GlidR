@@ -43,7 +43,7 @@ public class HomePage {
 
         //add weekday buttons to weekday grid
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-        for (int i = 0; i<7; i++) {
+        for (int i = 0; i<6; i++) {
             WeekdayButton button = new WeekdayButton(i, dayOfWeek);
             button.getPane().setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
