@@ -68,24 +68,24 @@ public class HomePage {
                     if (currentDayPane == 0 && button.getBarIndex() != 0) {
                         //colour buttons brown
                         for (int i = 0; i < 24; i++) {
-                            timePanes[i].setColor(ColourScheme.DARK_BROWN);
+                            timePanes[i].setColor(ColourScheme.MIDDLE_GREY);
                         }
-                        timePanes[currentTimePane].setColor(ColourScheme.LIGHT_BROWN);
+                        timePanes[currentTimePane].setColor(ColourScheme.LIGHT_GREY);
                     } else if (currentDayPane != 0 && button.getBarIndex() == 0) {
                         //colour grey
                         for (int i = 0; i < currentHour; i++) {
-                            timePanes[i].setColor(ColourScheme.DARK_GREY);
+                            timePanes[i].setColor(ColourScheme.MIDDLE_GREY);
                         }
 
                         //select least valid time
                         if (currentTimePane < currentHour) currentTimePane = currentHour;
                         focusState = weatherInterface.getWeather(currentDayPane, currentHour);
-                        timePanes[currentHour].setColor(ColourScheme.LIGHT_BROWN);
+                        timePanes[currentHour].setColor(ColourScheme.LIGHT_GREY);
                         updateNodes();
                     }
 
-                    weekdayPanes[currentDayPane].setColor(ColourScheme.DARK_BROWN);
-                    button.setColor(ColourScheme.LIGHT_BROWN);
+                    weekdayPanes[currentDayPane].setColor(ColourScheme.MIDDLE_GREY);
+                    button.setColor(ColourScheme.LIGHT_GREY);
                     currentDayPane = button.getBarIndex();
                 }
             });
@@ -124,8 +124,8 @@ public class HomePage {
                         final KeyFrame kf = new KeyFrame(Duration.millis(500), kv);
                         timeline.getKeyFrames().add(kf);
 
-                        time.setColor(ColourScheme.LIGHT_BROWN);
-                        timePanes[currentTimePane].setColor(ColourScheme.DARK_BROWN);
+                        time.setColor(ColourScheme.LIGHT_GREY);
+                        timePanes[currentTimePane].setColor(ColourScheme.MIDDLE_GREY);
                         currentTimePane = selectedTime;
                         timeline.play();
                     }

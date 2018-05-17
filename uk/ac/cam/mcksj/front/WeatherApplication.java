@@ -71,6 +71,8 @@ public class WeatherApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
+
+
         updateDayTime();
 
         //instantiate weatherInterface
@@ -95,6 +97,11 @@ public class WeatherApplication extends Application {
         primaryStage.setTitle("test");
         primaryStage.setResizable(false);
         primaryStage.setScene(mainScene);
+
+        //without this the window itself isn't 800x480 for me, I have no ides why
+        primaryStage.setMinHeight(829);
+        primaryStage.setMaxWidth(486);
+
         primaryStage.show();
     }
 

@@ -2,6 +2,7 @@ package uk.ac.cam.mcksj.front;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import uk.ac.cam.mcksj.WeekDay;
@@ -9,7 +10,7 @@ import uk.ac.cam.mcksj.WeekDay;
 public class WeekdayButton {
     private StackPane pane = new StackPane();
     private int barIndex;
-    private String days = "SMTWTFS";
+    private String[] days = {"Su","Mo","Tu","We","Th","Fr","Sa"};
     private String iconLabel;
     private Text text = new Text();
     private WeekDay weekDay;
@@ -20,15 +21,16 @@ public class WeekdayButton {
         updateDayOfWeek(dayOfWeek);
 
         text.setFont(Font.font(30));
+        text.setFill(Color.WHITE);
         pane.getChildren().add(text);
         pane.setMinSize(480.0 / 6.0, 68);
 
-        pane.setStyle("-fx-background-color: #"+ColourScheme.DARK_BROWN);
-        if (barIndex == 0) pane.setStyle("-fx-background-color: #"+ColourScheme.LIGHT_BROWN);
+        pane.setStyle("-fx-background-color: #"+ColourScheme.MIDDLE_GREY);
+        if (barIndex == 0) pane.setStyle("-fx-background-color: #"+ColourScheme.LIGHT_GREY);
     }
 
     public void updateDayOfWeek(int dayOfWeek) {
-        this.iconLabel = Character.toString(days.charAt((dayOfWeek+ barIndex -1)%7));
+        this.iconLabel = days[(dayOfWeek+ barIndex -1)%7];
         text.setText(this.iconLabel);
     }
 
