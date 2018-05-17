@@ -11,11 +11,10 @@ public class Backend implements Middle {
 
     public static void main(String[] args) throws IOException {
         Backend back = new Backend();
-        System.out.println(back.getWeather(WeekDay.THURSDAY, 12).getStarRating());
     }
 
 
-    private int latitude, longitude;
+    private double latitude, longitude;
 
     // Indexed first by day, then by time (note time=0..5 are null)
     private WeatherState[][] weatherCache;
@@ -28,11 +27,7 @@ public class Backend implements Middle {
         updateWeather();
     }
 
-    /*
-    This should take a location argument but I'm not sure
-    what format location should be in
-    Return true for successful update
-     */
+    @Override
     public boolean updateWeather() throws IOException {
         rasp.updateThermalData();
         for(int dIndex = 0; dIndex < 7; dIndex++) {
@@ -44,8 +39,8 @@ public class Backend implements Middle {
                 float visibility = 0;
                 float rain = 0;
 
-                int starRating = rasp.getThermalUpdraft(WeekDay.values()[dIndex], time);
-                //
+                //int starRating = rasp.getThermalUpdraft(WeekDay.values()[dIndex], time);
+                int starRating = 0;
 
                 weatherCache[dIndex][time] = new WeatherState(starRating, temperature, visibility, rain, day, time);
             }
@@ -53,18 +48,16 @@ public class Backend implements Middle {
         return true;
     }
 
-    //time is an int ranging from 0-23 inclusive
-    //Should return a WeatherState object which includes conditions for specified day/time
-    public WeatherState getWeather(WeekDay day, int time){
-        if(time < 0 || time >= 24)
+    @Override
+    public WeatherState getWeather(int day, int time){
+        if(time < 0 || time >= 24 || day < 0 || day > 7)
             throw new IllegalArgumentException("Time " + time + " is not supported");
-        return weatherCache[day.index][time];
+        return weatherCache[day][time];
     }
 
 
-    //change location by specifying lat - long
-    //returns true for successful location change
-    public boolean changeLocation(int latitude, int longitude){
+    @Override
+    public boolean changeLocation(double latitude, double longitude){
         this.latitude = latitude;
         this.longitude = longitude;
 

@@ -12,8 +12,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import uk.ac.cam.mcksj.Middle;
 import uk.ac.cam.mcksj.WeatherState;
-import uk.ac.cam.mcksj.WeekDay;
 
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -21,22 +21,25 @@ import java.util.LinkedList;
 public class HomePage {
 
     private LinkedList<WeatherNode> weatherNodes = new LinkedList<>();
-
-    //TODO: don't define this here u donut
-    private WeatherState selectedWeather = new WeatherState(2,18,5, 0.12f,WeekDay.SATURDAY, 15);
-
+    
     private Calendar calendar = Calendar.getInstance();
 
     private WeekdayButton[] weekdayPanes = new WeekdayButton[7];
-    private int currentPane = 0;
+    private int currentDayPane = 0;
 
     private TimeButton[] timePanes = new TimeButton[24];
     private int currentTimePane;
 
     private Scene mainScene;
     private Scene settingsScene;
+    
+    private Middle weatherInteface;
+    private WeatherState focusState;
 
-    public HomePage(Stage primaryStage, int currentHour, Calendar calendar) {
+    public HomePage(Stage primaryStage, int currentHour, Calendar calendar, Middle weatherInterface) {
+        this.weatherInteface = weatherInterface;
+
+        focusState = weatherInterface.getWeather(0,currentHour);
         //grid for days of the week
         GridPane dayGridPane = new GridPane();
         dayGridPane.setLayoutY(800-68);
@@ -48,11 +51,13 @@ public class HomePage {
             button.getPane().setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    //TODO update weather with API call using current time and button.getWeekDay() and update nodes
-
-                    weekdayPanes[currentPane].setColor(ColourScheme.DARK_BROWN);
+                    //update weather with API call using current time and button.getWeekDay() and update nodes
+                    focusState = weatherInterface.getWeather(button.getBarIndex(),currentTimePane);
+                    updateNodes();
+                    
+                    weekdayPanes[currentDayPane].setColor(ColourScheme.DARK_BROWN);
                     button.setColor(ColourScheme.LIGHT_BROWN);
-                    currentPane = button.getBarIndex();
+                    currentDayPane = button.getBarIndex();
                 }
             });
             dayGridPane.add(button.getPane(),i,0);
@@ -78,9 +83,9 @@ public class HomePage {
             time.getPane().setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    //TODO: update time by querying API with selectedTime and current Weekday
+                    //update time by querying API with selectedTime and current Weekday
                     int selectedTime = time.getTime();
-                    selectedWeather = new WeatherState(5,100,5,0.12f, WeekDay.SATURDAY,10);
+                    focusState = weatherInterface.getWeather(currentDayPane,selectedTime);
                     updateNodes();
 
                     final Timeline timeline = new Timeline();
@@ -115,23 +120,23 @@ public class HomePage {
         quadGrid.setLayoutY(124);
 
         //Insert weather nodes
-        WeatherNode rating = new RatingNode(selectedWeather);
+        WeatherNode rating = new RatingNode(focusState);
         quadGrid.add(rating, 0,0,2,1);
         weatherNodes.add(rating);
 
-        WeatherNode temperature = new TemperatureNode(selectedWeather);
+        WeatherNode temperature = new TemperatureNode(focusState);
         quadGrid.add(temperature, 0,1);
         weatherNodes.add(temperature);
 
-        WeatherNode wind = new WindNode(selectedWeather);
+        WeatherNode wind = new WindNode(focusState);
         quadGrid.add(wind, 0,2);
         weatherNodes.add(wind);
 
-        WeatherNode rain = new RainNode(selectedWeather);
+        WeatherNode rain = new RainNode(focusState);
         quadGrid.add(rain, 1,1);
         weatherNodes.add(rain);
 
-        WeatherNode visibility = new VisibilityNode(selectedWeather);
+        WeatherNode visibility = new VisibilityNode(focusState);
         quadGrid.add(visibility, 1,2);
         weatherNodes.add(visibility);
 
@@ -183,7 +188,7 @@ public class HomePage {
 
     public void updateNodes() {
         for (WeatherNode node : weatherNodes) {
-            node.update(selectedWeather);
+            node.update(focusState);
         }
     }
 
