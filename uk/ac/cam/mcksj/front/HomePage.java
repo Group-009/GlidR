@@ -208,7 +208,7 @@ public class HomePage {
         root.getChildren().add(timeBarPane);
         root.getChildren().add(settingsPane);
         //root.setStyle("-fx-background-color: #"+ColourScheme.LIGHT_GREY);
-        if (selectedWeather.getRain() > backgroundChangeThreshold){
+        if (focusState.getRain() > backgroundChangeThreshold){
             root.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/background_storm.png');");
         } else {
             root.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/background_sunny.png');");
