@@ -61,9 +61,31 @@ public class OpenWeatherMapAPI {
                 break;
             }
         }
+
+
+
         for(String s: stringArray) {
-            System.out.println(s);
+            if (s != null && s.contains("temp")) {
+                int tempIndex = s.indexOf("temp\":");
+                int rainIndex = s.indexOf("\"rain\":{\"3h\":");
+                int visIndex = s.indexOf("\"clouds\":{\"all\":");
+                int windIndex = s.indexOf("\"speed\":");
+
+                Double temp = Double.valueOf(s.substring(tempIndex + 6, tempIndex + 11).replaceAll("[^0-9.]",""))-273.15;
+                Double rain = 0.0;
+                if(s.contains("\"rain\":{\"3h\":")){
+                    rain = Double.valueOf(s.substring(rainIndex + 13, rainIndex + 17).replaceAll("[^0-9.]",""));
+                }
+                Double vis = 100.00 - Double.valueOf(s.substring(visIndex + 16, visIndex + 18).replaceAll("[^0-9.]",""));
+                Double wind = Double.valueOf(s.substring(windIndex + 8, windIndex + 14).replaceAll("[^0-9.]",""));
+                System.out.println(s);
+            }
         }
+
+
+
+
+        // extract temp, rain visibility
     }
 
 
