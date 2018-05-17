@@ -10,6 +10,10 @@ import java.nio.charset.StandardCharsets;
 
 public class RaspAPI {
 
+    public static final int MIN_SUPPORTED_TIME = 6,
+                            MAX_SUPPORTED_TIME = 18;
+
+
     /*
     Relationship between lat-long and i-k can be represented with a matrix
     These values were determined from tests in uk.ac.cam.mcksj.RASPMatrix
@@ -20,12 +24,13 @@ public class RaspAPI {
             {0.0, 0.0, 1.0}
     };
 
-    private int i = 1000, k = 1000;
+    private int i, k;
 
-    public static void main(String[] args) throws IOException {
-        RaspAPI api = new RaspAPI();
-        for(int j = 6; j <= 18; j++)
-            System.out.println(api.getThermalUpdraft(WeekDay.FRIDAY, j));
+    private int[][] thermalSpeedCache = new int[24][MAX_SUPPORTED_TIME+1];
+
+    public RaspAPI(double lat, double lon) {
+        if(!setIK(lat, lon))
+            throw new IllegalArgumentException("Invalid lat/lon: " + lat + " " + lon);
     }
 
     /**
@@ -35,9 +40,36 @@ public class RaspAPI {
      * @return Whether the co-ordinates are valid
      */
     public boolean setIK(double lat, double lon) {
-        int i = (int) (lat * TRANSFORM_MAT[0][0] + lon * TRANSFORM_MAT[0][1] + 1 * TRANSFORM_MAT[0][2]);
-        int k = (int) (lat * TRANSFORM_MAT[1][0] + lon * TRANSFORM_MAT[1][1] + 1 * TRANSFORM_MAT[1][2]);
+        i = (int) (lat * TRANSFORM_MAT[0][0] + lon * TRANSFORM_MAT[0][1] + 1 * TRANSFORM_MAT[0][2]);
+        k = (int) (lat * TRANSFORM_MAT[1][0] + lon * TRANSFORM_MAT[1][1] + 1 * TRANSFORM_MAT[1][2]);
         return (i >= 0) && (i <= 2000) && (k >= 0) && (k <= 2000);
+    }
+
+    /**
+     * Rereads all weather data for the week.  Should be called periodically/after location change
+     * @throws IOException
+     */
+
+    public void updateThermalData() throws IOException {
+        for(int day = 0; day < 7; day++) {
+            String dayStr = WeekDay.values()[day].toString().toLowerCase();
+            dayStr = dayStr.substring(0, 1).toUpperCase() + dayStr.substring(1);
+            BufferedInputStream in = null;
+            try {
+                in = new BufferedInputStream(new URL(generateRASPURL(dayStr)).openStream());
+                byte[] dataRaw = in.readAllBytes();
+                String data = new String(dataRaw, StandardCharsets.UTF_8);
+                String thermalData = data.split("\n")[0];
+                for(int time = 6; time <= 18; time++) {
+                    thermalSpeedCache[day][time] = parseThermalData(thermalData, time);
+                }
+            }
+            finally {
+                if(in != null)
+                    in.close();
+            }
+
+        }
     }
 
     /**
@@ -47,25 +79,9 @@ public class RaspAPI {
      * @return The thermal updraft for that time and day in //TODO
      */
     public int getThermalUpdraft(WeekDay day, int time) throws IOException {
-        if(time < 6 || time > 18)
-            throw new IllegalArgumentException("time " + time + " is not supported by RASP.  "
-            + "Please use the range 06:00-18:00");
-
-        String dayStr = day.toString().toLowerCase();
-        dayStr = dayStr.substring(0, 1).toUpperCase() + dayStr.substring(1);
-        BufferedInputStream in = null;
-        try {
-            in = new BufferedInputStream(new URL(generateRASPURL(dayStr)).openStream());
-            byte[] dataRaw = in.readAllBytes();
-            String data = new String(dataRaw, StandardCharsets.UTF_8);
-            String thermalData = data.split("\n")[0];
-            return parseThermalData(thermalData, time);
-        }
-        finally {
-            if(in != null)
-                in.close();
-        }
-
+        if(time < MIN_SUPPORTED_TIME || time > MAX_SUPPORTED_TIME)
+            return 0;
+        return thermalSpeedCache[day.index][time];
     }
 
     /**
