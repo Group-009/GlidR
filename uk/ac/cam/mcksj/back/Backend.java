@@ -9,24 +9,29 @@ import java.io.IOException;
 
 public class Backend implements Middle {
 
-    public static void main(String[] args) throws IOException {
-        Backend back = new Backend();
-        System.out.println(back.getWeather(WeekDay.THURSDAY, 12).getStarRating());
+    public static void main(String[] args) throws IOException, NoWeatherDataException {
+        Backend back = new Backend(52, 0);
+        System.out.println(back.getWeather(0, 12).getStarRating());
     }
 
 
     private int latitude, longitude;
 
-    // Indexed first by day, then by time (note time=0..5 are null)
+    // Indexed first by day, then by time
     private WeatherState[][] weatherCache;
 
     private RaspAPI rasp;
 
+<<<<<<< HEAD
     private OpenWeatherMapAPI owm;
 
 
     public Backend() throws IOException {
         rasp = new RaspAPI(52, 0);
+=======
+    public Backend(double lat, double lon) throws IOException, NoWeatherDataException {
+        rasp = new RaspAPI(lat, lon);
+>>>>>>> cac0f6d1dd1cf462732be9de5d3aa6530e4aceba
         weatherCache = new WeatherState[7][24];
         updateWeather();
     }
@@ -36,9 +41,9 @@ public class Backend implements Middle {
     what format location should be in
     Return true for successful update
      */
-    public boolean updateWeather() throws IOException {
+    public boolean updateWeather() throws IOException, NoWeatherDataException {
         rasp.updateThermalData();
-        for(int dIndex = 0; dIndex < 7; dIndex++) {
+        for(int dIndex = 0; dIndex < 5; dIndex++) {
             for(int time = 0; time <= 23; time++) {
                 WeekDay day = WeekDay.values()[dIndex];
 
@@ -47,7 +52,7 @@ public class Backend implements Middle {
                 float visibility = 0;
                 float rain = 0;
 
-                int starRating = rasp.getThermalUpdraft(WeekDay.values()[dIndex], time);
+                int starRating = 0;
                 //
 
                 weatherCache[dIndex][time] = new WeatherState(starRating, temperature, visibility, rain, day, time);
@@ -58,10 +63,10 @@ public class Backend implements Middle {
 
     //time is an int ranging from 0-23 inclusive
     //Should return a WeatherState object which includes conditions for specified day/time
-    public WeatherState getWeather(WeekDay day, int time){
+    public WeatherState getWeather(int day, int time){
         if(time < 0 || time >= 24)
             throw new IllegalArgumentException("Time " + time + " is not supported");
-        return weatherCache[day.index][time];
+        return weatherCache[day][time];
     }
 
 
