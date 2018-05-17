@@ -24,7 +24,6 @@ import static javafx.scene.layout.BackgroundRepeat.NO_REPEAT;
 public class RatingNode extends WeatherNode {
     private Line line;
     private int rating;
-    private Image backgroundImage = new Image("uk/ac/cam/mcksj/img/gaugeBackground.png");
     Rotate rotation;
 
     public RatingNode(WeatherState state) {
@@ -45,8 +44,11 @@ public class RatingNode extends WeatherNode {
         line.getTransforms().add(rotation);
 
         update(state);
-
-        this.setBackground(new Background(new BackgroundImage(backgroundImage, NO_REPEAT, NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+        //backgound image
+        BackgroundImage bg = new BackgroundImage(new Image("uk/ac/cam/mcksj/img/gaugeBackground.png"),
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT);
+        this.setBackground(new Background(bg));
 
         this.getChildren().add(line);
     }
