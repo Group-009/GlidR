@@ -22,16 +22,11 @@ public class Backend implements Middle {
 
     private RaspAPI rasp;
 
-<<<<<<< HEAD
     private OpenWeatherMapAPI owm;
 
 
-    public Backend() throws IOException {
-        rasp = new RaspAPI(52, 0);
-=======
     public Backend(double lat, double lon) throws IOException, NoWeatherDataException {
         rasp = new RaspAPI(lat, lon);
->>>>>>> cac0f6d1dd1cf462732be9de5d3aa6530e4aceba
         weatherCache = new WeatherState[7][24];
         updateWeather();
     }
@@ -51,11 +46,11 @@ public class Backend implements Middle {
                 float temperature = 0;
                 float visibility = 0;
                 float rain = 0;
-
+                float wind = 0;
                 int starRating = 0;
                 //
 
-                weatherCache[dIndex][time] = new WeatherState(starRating, temperature, visibility, rain, day, time);
+                weatherCache[dIndex][time] = new WeatherState(starRating, temperature, visibility, rain, wind, day, time);
             }
         }
         return true;
@@ -79,7 +74,7 @@ public class Backend implements Middle {
         if(!rasp.setIK(latitude, longitude))
             return false;
 
-        WeatherState currWeatherState = new WeatherState(0,0,0,0,WeekDay.MONDAY,0);
+        WeatherState currWeatherState = new WeatherState(0,0,0,0, 0,WeekDay.MONDAY,0);
 
         return true;
     }

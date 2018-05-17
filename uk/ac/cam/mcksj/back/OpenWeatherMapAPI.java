@@ -61,15 +61,15 @@ public class OpenWeatherMapAPI {
                 break;
             }
         }
-
-
-
+        
         for(String s: stringArray) {
             if (s != null && s.contains("temp")) {
                 int tempIndex = s.indexOf("temp\":");
                 int rainIndex = s.indexOf("\"rain\":{\"3h\":");
                 int visIndex = s.indexOf("\"clouds\":{\"all\":");
                 int windIndex = s.indexOf("\"speed\":");
+                int timeIndex = s.indexOf("\"dt_txt\":");
+                int unixTimeIndex = s.indexOf("\"dt\":");
 
                 Double temp = Double.valueOf(s.substring(tempIndex + 6, tempIndex + 11).replaceAll("[^0-9.]",""))-273.15;
                 Double rain = 0.0;
@@ -78,14 +78,13 @@ public class OpenWeatherMapAPI {
                 }
                 Double vis = 100.00 - Double.valueOf(s.substring(visIndex + 16, visIndex + 18).replaceAll("[^0-9.]",""));
                 Double wind = Double.valueOf(s.substring(windIndex + 8, windIndex + 14).replaceAll("[^0-9.]",""));
+                int time = Integer.valueOf(s.substring(timeIndex + 20, timeIndex + 24).replaceAll("[^0-9.]",""));
+
+
                 System.out.println(s);
+                System.out.println(time);
             }
         }
-
-
-
-
-        // extract temp, rain visibility
     }
 
 
@@ -95,13 +94,5 @@ public class OpenWeatherMapAPI {
         String data = owmapi.update();
         owmapi.parse(data);
 
-
-
-        // To Do:
-        //  Get hourly weather for next week
-        //  Parse response
-
-//        Backend back = new Backend();
-//        back.updateWeather();
     }
 }
