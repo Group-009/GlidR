@@ -17,6 +17,9 @@ public class Backend implements Middle {
 
     private RaspAPI rasp;
 
+    private OpenWeatherMapAPI owm;
+
+
     public Backend() {
         rasp = new RaspAPI();
         weatherCache = new WeatherState[7][MAX_SUPPORTED_TIME + 1];
