@@ -8,12 +8,16 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import uk.ac.cam.mcksj.Middle;
 
 public class SettingsPage {
 
-    Scene settingsScene;
+    private Scene settingsScene;
+    private Middle weatherInterface;
 
-    public SettingsPage(Stage primaryStage, Scene mainScene) {
+    public SettingsPage(Stage primaryStage, HomePage homePage, Middle weatherInterface) {
+        this.weatherInterface = weatherInterface;
+
         //SETTINGS SCREEN
         Pane settingsRoot = new Pane();
 
@@ -25,7 +29,7 @@ public class SettingsPage {
         settingsClose.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                primaryStage.setScene(mainScene);
+                primaryStage.setScene(homePage.getMainScene());
             }
         });
 
@@ -67,7 +71,11 @@ public class SettingsPage {
                     if (latitude < -90 || latitude > 90) throw new LocationFormatException("Latitude out of bounds");
                     if (longitude < -180 || longitude > 180) throw new LocationFormatException("Longitude out of bounds");
 
-                    //TODO call API and handle false return
+                    //call API for location update and handle false return
+                    if (!weatherInterface.changeLocation(latitude, longitude)) throw new LocationFormatException(" Invalid location");
+
+                    //update the dials
+                    homePage.updateNodes();
                     messageText.setText("Location updated to: ("+latitude+", "+longitude+")");
 
                 } catch (NumberFormatException e) {
