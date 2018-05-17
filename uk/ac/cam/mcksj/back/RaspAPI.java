@@ -1,7 +1,6 @@
 package uk.ac.cam.mcksj.back;
 
 import uk.ac.cam.mcksj.WeekDay;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;

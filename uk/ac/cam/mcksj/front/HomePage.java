@@ -9,8 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import uk.ac.cam.mcksj.WeatherState;
@@ -113,7 +112,7 @@ public class HomePage {
 
         //middle grid of weather conditions
         GridPane quadGrid = new GridPane();
-        quadGrid.setGridLinesVisible(true);
+        //quadGrid.setGridLinesVisible(true);
         quadGrid.setLayoutX(60);
         quadGrid.setLayoutY(124);
 
@@ -173,7 +172,8 @@ public class HomePage {
         root.getChildren().add(quadGrid);
         root.getChildren().add(timeBarPane);
         root.getChildren().add(settingsPane);
-        root.setStyle("-fx-background-color: #"+ColourScheme.LIGHT_GREY);
+        //root.setStyle("-fx-background-color: #"+ColourScheme.LIGHT_GREY);
+        root.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/background.png');");
 
         Group borders = new Group();
         borders.getChildren().add(timeDayBorder);
@@ -182,6 +182,7 @@ public class HomePage {
 
         mainScene = new Scene(root, 480, 800);
         mainScene.getStylesheets().add("uk/ac/cam/mcksj/front/styles.css");
+
     }
 
     public void updateNodes() {

@@ -80,15 +80,12 @@ public class WeatherApplication extends Application {
         //Location for Cambridge - in real app would use GPS module
         weatherInterface.changeLocation(52.208816, 0.117754);
 
-        //for debugging using background measurements image
-        //root.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/scaleMockUp.png');");
-
         //Main screen
         homePage = new HomePage(primaryStage, currentTime, calendar,weatherInterface);
         mainScene = homePage.getMainScene();
 
         //Settings screen
-        settingsPage = new SettingsPage(primaryStage, mainScene);
+        settingsPage = new SettingsPage(primaryStage, homePage, weatherInterface);
         settingsScene = settingsPage.getSettingsScene();
 
         //make the settings button work on the main screen
