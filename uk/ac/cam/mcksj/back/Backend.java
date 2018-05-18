@@ -40,6 +40,7 @@ public class Backend implements Middle {
         rasp.updateThermalData();
         for(int dIndex = 0; dIndex < 5; dIndex++) {
             for(int time = 0; time <= 23; time++) {
+                //TODO
                 WeekDay day = WeekDay.values()[dIndex];
 
                 // TODO
