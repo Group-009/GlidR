@@ -22,9 +22,6 @@ public class Backend implements Middle {
 
     private RaspAPI rasp;
 
-    private OpenWeatherMapAPI owm;
-
-
     public Backend(double lat, double lon) throws IOException, NoWeatherDataException {
         rasp = new RaspAPI(lat, lon);
         weatherCache = new WeatherState[7][24];
@@ -37,6 +34,7 @@ public class Backend implements Middle {
     Return true for successful update
      */
     public boolean updateWeather() throws IOException, NoWeatherDataException {
+        weatherCache = OpenWeatherMapAPI.update(latitude, longitude);
         rasp.updateThermalData();
         for(int dIndex = 0; dIndex < 5; dIndex++) {
             for(int time = 0; time <= 23; time++) {
