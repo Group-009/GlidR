@@ -19,5 +19,5 @@ public interface Middle {
 
     //change location by specifying lat - long
     //returns true for successful location change
-    public boolean changeLocation(int latitude, int longitude);
+    public boolean changeLocation(double latitude, double longitude);
 }

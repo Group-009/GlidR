@@ -5,9 +5,11 @@ import uk.ac.cam.mcksj.WeatherState;
 import uk.ac.cam.mcksj.WeekDay;
 
 import java.io.IOException;
+import java.util.Random;
 
 
 public class Backend implements Middle {
+
 
     public static void main(String[] args) throws IOException, NoWeatherDataException {
         Backend back = new Backend(52, 0);
@@ -15,7 +17,7 @@ public class Backend implements Middle {
     }
 
 
-    private int latitude, longitude;
+    private double latitude, longitude;
 
     // Indexed first by day, then by time
     private WeatherState[][] weatherCache;
@@ -27,6 +29,7 @@ public class Backend implements Middle {
         weatherCache = new WeatherState[7][24];
         updateWeather();
     }
+
 
     /*
     This should take a location argument but I'm not sure
@@ -42,6 +45,7 @@ public class Backend implements Middle {
                 WeekDay day = WeekDay.values()[dIndex];
 
                 // TODO
+
                 float temperature = 0;
                 float visibility = 0;
                 float rain = 0;
@@ -49,11 +53,13 @@ public class Backend implements Middle {
                 int starRating = 0;
                 //
 
+
                 weatherCache[dIndex][time] = new WeatherState(starRating, temperature, visibility, rain, wind, day, time);
             }
         }
         return true;
     }
+
 
     //time is an int ranging from 0-23 inclusive
     //Should return a WeatherState object which includes conditions for specified day/time
@@ -64,9 +70,8 @@ public class Backend implements Middle {
     }
 
 
-    //change location by specifying lat - long
-    //returns true for successful location change
-    public boolean changeLocation(int latitude, int longitude){
+    @Override
+    public boolean changeLocation(double latitude, double longitude){
         this.latitude = latitude;
         this.longitude = longitude;
 
