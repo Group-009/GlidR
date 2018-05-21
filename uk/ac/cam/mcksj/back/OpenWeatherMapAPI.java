@@ -13,10 +13,37 @@ import java.util.Date;
 
 public class OpenWeatherMapAPI {
 
-    public static WeatherState[][] update(float lat, float lon){
+    private static final String APIKey = "289d10d3384fffe3eaec60ea7d27f8c6";
+
+    /**
+     * Returns an up to date WeatherState[day][hour]
+     * 0<=day<=4
+     * 0<=hour<=23
+     * @param lat latitude
+     * @param lon longitude
+     * @return weatherCache
+     */
+    public static WeatherState[][] update(double lat, double lon){
+        String hourly_data = getJSONData(lat, lon);
+
+        WeatherState[][] weatherCache = parse(hourly_data);
+        interpolateWeather(weatherCache);
+
+        return weatherCache;
+    }
+
+
+    /**
+     * Returns the JSON response from https://openweathermap.org/ for a given longitude and latitude (hourly data)
+     *
+     * @param lat latitude
+     * @param lon longitude
+     * @return the JSON response in form of a string
+     */
+    private static String getJSONData(double lat, double lon){
         String hourly_data = "";
         try {
-            URL url = new URL("http://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=289d10d3384fffe3eaec60ea7d27f8c6");
+            URL url = new URL("http://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + APIKey);
             InputStream in = url.openConnection().getInputStream();
 
             ReadableByteChannel readChannel = Channels.newChannel(in);
@@ -33,23 +60,17 @@ public class OpenWeatherMapAPI {
         catch(Exception e){
             System.out.println(e);
         }
-
-        WeatherState[][] weatherCache = parse(hourly_data);
-        interpolateWeather(weatherCache);
-
-
-        return weatherCache;
+        return hourly_data;
     }
 
-    private static WeatherState[][] parse(String data){
-        char[] charArray = data.toCharArray();
+    private static WeatherState[][] parse(String JSONData){
+        char[] charJSONData = JSONData.toCharArray();
 
         int bracketDepth = 0;
-        int index = 0;
         String currString = "";
         String[] stringArray = new String[50];
 
-        WeatherState[][] weatherCache = new WeatherState[6][24];
+        WeatherState[][] weatherCache = new WeatherState[5][24];
         float temp = 0.0f;
         float rain = 0.0f;
         float vis = 0.0f;
@@ -59,18 +80,17 @@ public class OpenWeatherMapAPI {
         int unixDeltaDay = 0;
 
         int stringArrayIndex = 0;
-        for(int i=0; i<charArray.length; i++) {
-            index+=1;
-            if(charArray[i] == '{' || charArray[i] == '['){
+        for(char c: charJSONData) {
+            if(c == '{' || c == '['){
                 bracketDepth += 1;
             }
-            else if (charArray[i] == '}' || charArray[i] == ']'){
+            else if (c == '}' || c == ']'){
                 bracketDepth -= 1;
             }
 
-            currString += charArray[i];
+            currString += c;
 
-            if (bracketDepth == 2 && (charArray[i] == '}' || charArray[i] == ']')) {
+            if (bracketDepth == 2 && (c == '}' || c == ']')) {
                 stringArray[stringArrayIndex] = currString;
                 stringArrayIndex += 1;
                 currString = "";
@@ -104,36 +124,11 @@ public class OpenWeatherMapAPI {
                 unixTime = Integer.valueOf(s.substring(unixTimeIndex + 5, unixTimeIndex + 15).replaceAll("[^0-9.]",""));
                 unixDeltaDay = unixTime/86400-firstUnixDay;
 
-                SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
-                Date dateFormat = new java.util.Date(unixTime * 1000);
-                String weekday = sdf.format(dateFormat);
-                System.out.println();
-
-                WeekDay day = WeekDay.MONDAY;
-
-                if(weekday.equals("Tuesday")){
-                    day = WeekDay.TUESDAY;
-                }
-                else if(weekday.equals("Wednesday")){
-                    day = WeekDay.WEDNESDAY;
-                }
-                else if(weekday.equals("Thursday")){
-                    day = WeekDay.THURSDAY;
-                }
-                else if(weekday.equals("Friday")){
-                    day = WeekDay.FRIDAY;
-                }
-                else if(weekday.equals("Saturday")){
-                    day = WeekDay.SATURDAY;
-                }
-                else if(weekday.equals("Sunday")){
-                    day = WeekDay.SUNDAY;
-                }
+                WeekDay day = cnvrtUnixToWeekDay(unixTime);
 
                 WeatherState currWeatherState = new WeatherState(0, temp, vis, rain, wind, day, time);
 
                 System.out.println(s);
-                System.out.println(weekday);
                 System.out.println(unixDeltaDay);
                 weatherCache[unixDeltaDay][time] = currWeatherState;
             }
@@ -141,6 +136,50 @@ public class OpenWeatherMapAPI {
         return weatherCache;
     }
 
+
+    /**
+     * Converts unix time to WeekDay for UTC, does not take timezones into account
+     *
+     * @param unixTime a given unix time stamp
+     * @return the corresponding Weekday
+     */
+    private static WeekDay cnvrtUnixToWeekDay(int unixTime){
+
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+        Date dateFormat = new java.util.Date(unixTime * 1000);
+        String weekday = sdf.format(dateFormat);
+
+        WeekDay day = WeekDay.MONDAY;
+
+        if(weekday.equals("Tuesday")){
+            day = WeekDay.TUESDAY;
+        }
+        else if(weekday.equals("Wednesday")){
+            day = WeekDay.WEDNESDAY;
+        }
+        else if(weekday.equals("Thursday")){
+            day = WeekDay.THURSDAY;
+        }
+        else if(weekday.equals("Friday")){
+            day = WeekDay.FRIDAY;
+        }
+        else if(weekday.equals("Saturday")){
+            day = WeekDay.SATURDAY;
+        }
+        else if(weekday.equals("Sunday")){
+            day = WeekDay.SUNDAY;
+        }
+
+        return day;
+    }
+
+
+    /**
+     * Fills in any missing data by using linear interpolation.
+     *
+     * @param weatherCache the 2D array of weather states
+     * @return pass by reference
+     */
     private static void interpolateWeather(WeatherState[][] weatherCache){
         WeatherState mostRecentState = new WeatherState(0,0.0f,0.0f,0,0,WeekDay.MONDAY, 0);
         for(int day=0; day<5; day++){
@@ -156,7 +195,12 @@ public class OpenWeatherMapAPI {
         return;
     }
 
-    public static void printWeatherCache(WeatherState[][] weatherCache){
+    /**
+     * Prints the weatherCache in CSV format
+     *
+     * @param weatherCache the 2D array of weather states
+     */
+    public static void printCSVWeatherCache(WeatherState[][] weatherCache){
         for(int day=0; day<5; day++){
             for(int time=0; time<24; time++){
                 System.out.print(weatherCache[day][time].getStarRating() + " ,");
@@ -171,7 +215,9 @@ public class OpenWeatherMapAPI {
     }
 
         // To do, Saaras:
-        //  Connect to backend
+        //  Implement JSON parser
+        //  Refactor
+        //  Input sanitsation, exception
         //  Improve interpolation
         //  Test/ debug
 
