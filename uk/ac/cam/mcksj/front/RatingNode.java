@@ -25,6 +25,7 @@ public class RatingNode extends WeatherNode {
     private Line line;
     private int rating;
     private Rotate rotation;
+    private ImageView[] stars;
 
     public RatingNode(WeatherState state) {
         //Setup gauge background
@@ -48,6 +49,17 @@ public class RatingNode extends WeatherNode {
         rotation.pivotYProperty().bind(line.startYProperty());
         line.getTransforms().add(rotation);
 
+        //Create the 5 stars in the background
+        stars = new ImageView[5];
+
+        for (int i = 0; i < 5; i++){
+            stars[i] = new ImageView(new Image("uk/ac/cam/mcksj/img/yellowStar.png"));
+            stars[i].setY(102);
+            stars[i].setX(78+41*i);
+            this.getChildren().add(stars[i]);
+        }
+
+
         update(state);
 
 
@@ -62,5 +74,14 @@ public class RatingNode extends WeatherNode {
         Timeline timeLine = new Timeline(kf);
         timeLine.play();
 
+        //update the number of stars being shown, hide the rest
+        //there are 6 possible states, from 0 to 5 stars. Thus
+        for (int i = 0; i < 5; i++){
+            if (state.getStarRating() >= i+1){
+                stars[i].setVisible(true);
+            } else {
+                stars[i].setVisible(false);
+            }
+        }
     }
 }
