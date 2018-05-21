@@ -205,6 +205,7 @@ public class OpenWeatherMapAPI {
      * @return pass by reference
      */
     private static void interpolateWeather(WeatherState[][] weatherCache){
+//        printCSVWeatherCache(weatherCache);
         for(int day=0; day<6; day++){
             for(int time=0; time<24; time++){
                 if (weatherCache[day][time]==null){
@@ -246,19 +247,31 @@ public class OpenWeatherMapAPI {
                 else{
                     prevState = weatherCache[day][time-1];
                 }
-                for(int timeW=time; timeW<24;timeW++){
+                for(int timeW=time; timeW<24; timeW++){
                     if (weatherCache[day][timeW] != null){
                         return calcNtileWeatherState(prevState,weatherCache[day][timeW], (timeW-time), time);
                     }
                 }
                 for(int dayW=day+1; dayW<6; dayW++){
-                    for(int timeW=0; timeW<24;timeW++){
+                    for(int timeW=0; timeW<24; timeW++){
                         if (weatherCache[dayW][timeW] != null){
                             return calcNtileWeatherState(prevState,weatherCache[dayW][timeW], (dayW-day)*24 + (timeW-time), time);
                         }
                     }
                 }
-                return null;
+
+//                for(int dayW=day; dayW<6; dayW++){
+//                    for(int timeW=time; timeW<24; timeW++){
+//                        if (weatherCache[dayW][timeW] != null){
+//                            return calcNtileWeatherState(prevState,weatherCache[dayW][timeW], (dayW-day)*24 + (timeW-time), time);
+//                        }
+//                    }
+//                }
+//
+//                System.out.print(day + " ");
+//                System.out.print(time + " ");
+//                System.out.println(weatherCache[day][time] != null);
+                return prevState;
             }
         }
     }
@@ -322,6 +335,19 @@ public class OpenWeatherMapAPI {
                 }
             }
         }
+    }
+
+    public static void main(String[] args){
+        WeatherState[][] weatherCache= new WeatherState[1][1];
+
+        try {
+            weatherCache = update(51.0, 0.0);
+        }
+        catch(Exception e){
+
+        }
+        printCSVWeatherCache(weatherCache);
+
     }
 }
 
