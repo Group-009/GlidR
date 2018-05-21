@@ -66,7 +66,7 @@ public class HomePage {
                 public void handle(MouseEvent event) {
                     //change colour of weekday buttons
                     if (currentDayPane == 0 && button.getBarIndex() != 0) {
-                        //colour buttons brown
+                        //colour buttons grey
                         for (int i = 0; i < 24; i++) {
                             timePanes[i].setColor(ColourScheme.MIDDLE_GREY);
                         }
@@ -81,7 +81,6 @@ public class HomePage {
                         if (currentTimePane < currentHour) currentTimePane = currentHour;
                         focusState = weatherInterface.getWeather(currentDayPane, currentTimePane);
                         timePanes[currentTimePane].setColor(ColourScheme.LIGHT_GREY);
-                        updateNodes();
                     }
 
                     weekdayPanes[currentDayPane].setColor(ColourScheme.MIDDLE_GREY);
@@ -129,8 +128,8 @@ public class HomePage {
                         currentTimePane = selectedTime;
 
                         //update time by querying API with selectedTime and current Weekday
-                        updateNodes();
                         timeline.play();
+                        updateNodes();
                     }
                 }
             });

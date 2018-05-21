@@ -16,6 +16,9 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import uk.ac.cam.mcksj.Middle;
+import uk.ac.cam.mcksj.back.NoWeatherDataException;
+
+import java.io.IOException;
 
 public class SettingsPage {
 
@@ -29,7 +32,7 @@ public class SettingsPage {
      * @param homePage Reference to return to the HomePage
      * @param weatherInterface For updating location information
      */
-    public SettingsPage(Stage primaryStage, HomePage homePage, Middle weatherInterface) {
+    public SettingsPage(Stage primaryStage, HomePage homePage, Middle weatherInterface, Scene retryScene) {
         this.weatherInterface = weatherInterface;
 
         //SETTINGS SCREEN
@@ -90,8 +93,13 @@ public class SettingsPage {
                     //call API for location update and handle false return
                     if (!weatherInterface.changeLocation(latitude, longitude)) throw new LocationFormatException(" Invalid location");
 
-                    //update the dials
-                    homePage.updateNodes();
+                    try {
+                        weatherInterface.updateWeather();
+                        //update the dials
+                        homePage.updateNodes();
+                    } catch (IOException|NoWeatherDataException e) {
+                        primaryStage.setScene(retryScene);
+                    }
                     messageText.setText("Location updated to: ("+latitude+", "+longitude+")");
 
                 } catch (NumberFormatException e) {

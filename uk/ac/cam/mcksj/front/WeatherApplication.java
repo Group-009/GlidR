@@ -143,7 +143,7 @@ public class WeatherApplication extends Application {
             mainScene = homePage.getMainScene();
 
             //Settings screen
-            settingsPage = new SettingsPage(primaryStage, homePage, weatherInterface);
+            settingsPage = new SettingsPage(primaryStage, homePage, weatherInterface, retryScene);
             settingsScene = settingsPage.getSettingsScene();
 
             //make the settings button work on the main screen
