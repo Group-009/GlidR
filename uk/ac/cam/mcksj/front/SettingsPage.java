@@ -97,8 +97,10 @@ public class SettingsPage {
                         weatherInterface.updateWeather();
                         //update the dials
                         homePage.updateNodes();
-                    } catch (IOException|NoWeatherDataException e) {
+                    } catch (IOException e) {
                         primaryStage.setScene(retryScene);
+                    } catch (NoWeatherDataException e) {
+                        throw new LocationFormatException("Invalid Location");
                     }
                     messageText.setText("Location updated to: ("+latitude+", "+longitude+")");
 
