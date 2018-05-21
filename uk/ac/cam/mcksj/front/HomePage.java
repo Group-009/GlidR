@@ -64,12 +64,6 @@ public class HomePage {
             button.getPane().setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    //update weather with API call using current time and button.getWeekDay() and update nodes
-                    focusState = weatherInterface.getWeather(button.getBarIndex(),currentTimePane);
-                    updateNodes();
-
-
-
                     //change colour of weekday buttons
                     if (currentDayPane == 0 && button.getBarIndex() != 0) {
                         //colour buttons brown
@@ -93,6 +87,9 @@ public class HomePage {
                     weekdayPanes[currentDayPane].setColor(ColourScheme.MIDDLE_GREY);
                     button.setColor(ColourScheme.LIGHT_GREY);
                     currentDayPane = button.getBarIndex();
+
+                    //update weather with API call using current time and button.getWeekDay() and update nodes
+                    updateNodes();
                 }
             });
             dayGridPane.add(button.getPane(),i,0);
@@ -120,10 +117,7 @@ public class HomePage {
                 public void handle(MouseEvent event) {
 
                     if (!(currentDayPane == 0 && !time.isValidTime())) { //Stops you selecting times in the past
-                        //update time by querying API with selectedTime and current Weekday
                         int selectedTime = time.getTime();
-                        focusState = weatherInterface.getWeather(currentDayPane, selectedTime);
-                        updateNodes();
 
                         final Timeline timeline = new Timeline();
                         final KeyValue kv = new KeyValue(timeBarPane.hvalueProperty(), ((time.getTime() - 3.0)) * (1.0 / 17.0));
@@ -133,6 +127,9 @@ public class HomePage {
                         timePanes[currentTimePane].setColor(ColourScheme.MIDDLE_GREY);
                         time.setColor(ColourScheme.LIGHT_GREY);
                         currentTimePane = selectedTime;
+
+                        //update time by querying API with selectedTime and current Weekday
+                        updateNodes();
                         timeline.play();
                     }
                 }
@@ -243,6 +240,7 @@ public class HomePage {
 
     //updates each weather node
     public void updateNodes() {
+        focusState = weatherInterface.getWeather(currentDayPane, currentTimePane);
         for (WeatherNode node : weatherNodes) {
             node.update(focusState);
         }
