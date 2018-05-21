@@ -14,9 +14,11 @@ public class Backend implements Middle {
     public static int SUPPORTED_DAYS = 6;
 
     public static void main(String[] args) throws IOException, NoWeatherDataException {
-        Backend back = new Backend(52, 0);
-        System.out.println(back.getWeather(0, 12).getStarRating());
-        OpenWeatherMapAPI.printCSVWeatherCache(back.weatherCache);
+        Backend back = new Backend();
+//        System.out.println(back.getWeather(0, 12).getStarRating());
+//        OpenWeatherMapAPI.printCSVWeatherCache(back.weatherCache);
+        back.changeLocation(52.208816, 0.117754);
+        System.out.println(back.getWeather(1, 22).getTemperature());
     }
 
     private double latitude, longitude;
@@ -34,7 +36,7 @@ public class Backend implements Middle {
         updateWeather();
     }
 
-    public Backend(double lat, double lon) throws IOException, NoWeatherDataException {
+    public Backend(double lat, double lon) throws IOException, NoWeatherDataException{
         longitude = lon;
         latitude = lat;
         rasp = new RaspAPI(lat, lon);
@@ -49,8 +51,8 @@ public class Backend implements Middle {
      * Times after 120 hours past the current time will contain null
      * @return True for a successful update
      */
-    public boolean updateWeather() throws IOException, NoWeatherDataException {
-        weatherCache = OpenWeatherMapAPI.update((float)latitude, (float)longitude);
+    public boolean updateWeather() throws IOException, NoWeatherDataException{
+        weatherCache = OpenWeatherMapAPI.update(latitude, longitude);
         rasp.updateThermalData();
         for(int dIndex = 0; dIndex < 6; dIndex++) {
             for(int time = 0; time <= 23; time++) {
@@ -119,6 +121,8 @@ public class Backend implements Middle {
         if(wNorm < 0)
             return 0;
 
-        return (int) (tNorm * vNorm * wNorm * 5f + 0.5f);
+        System.out.println((int) ((tNorm + vNorm + wNorm) / 3f * 5f + 0.5f));
+
+        return (int) ((tNorm + vNorm + wNorm) / 3f * 5f + 0.5f);
     }
 }
