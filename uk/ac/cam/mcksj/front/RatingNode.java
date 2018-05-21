@@ -66,6 +66,11 @@ public class RatingNode extends WeatherNode {
         this.getChildren().add(line);
     }
 
+    /**
+     * Updates the rating display
+     *
+     * @param state new weather state
+     */
     @Override
     public void update(WeatherState state) {
         //This function animates the needle to go to the next rating.

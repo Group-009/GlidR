@@ -17,6 +17,10 @@ public class RainNode extends WeatherNode {
     private ImageView img;
     private Image cloud = new Image("uk/ac/cam/mcksj/img/cloud.png");
 
+    /**
+     *
+     * @param state current weather state
+     */
     public RainNode(WeatherState state) {
         //Set up the text, image and layout
         BackgroundImage bg = new BackgroundImage(new Image("uk/ac/cam/mcksj/img/nodeBackground.png"),
@@ -40,6 +44,11 @@ public class RainNode extends WeatherNode {
         this.getChildren().add(box);
     }
 
+    /**
+     * Updates the rain display
+     *
+     * @param state new weather state
+     */
     @Override
     public void update(WeatherState state) {
         //Update the rain probability

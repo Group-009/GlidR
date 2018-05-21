@@ -46,7 +46,11 @@ public class Thermometer extends StackPane {
     }
 
 
-    //Updates the thermometer to represent current conditions, with animation
+    /**
+     * Update the thermometer with a new temperature
+     *
+     * @param degrees new temperature, in degrees celsius
+     */
     public void update(float degrees) {
         //Bounds the temperature as a double between 0 and 1
         double ratio = Math.max(0, Math.min(1,  (degrees - minTemp) / (double) (maxTemp - minTemp)));
