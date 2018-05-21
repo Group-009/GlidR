@@ -36,7 +36,7 @@ public class Backend implements Middle {
         updateWeather();
     }
 
-    public Backend(double lat, double lon) throws IOException, NoWeatherDataException {
+    public Backend(double lat, double lon) throws IOException, NoWeatherDataException{
         longitude = lon;
         latitude = lat;
         rasp = new RaspAPI(lat, lon);
@@ -51,7 +51,7 @@ public class Backend implements Middle {
      * Times after 120 hours past the current time will contain null
      * @return True for a successful update
      */
-    public boolean updateWeather() throws IOException, NoWeatherDataException {
+    public boolean updateWeather() throws IOException, NoWeatherDataException{
         weatherCache = OpenWeatherMapAPI.update(latitude, longitude);
         rasp.updateThermalData();
         for(int dIndex = 0; dIndex < 6; dIndex++) {

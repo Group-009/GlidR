@@ -5,6 +5,7 @@ import uk.ac.cam.mcksj.WeekDay;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.ByteBuffer;
@@ -26,7 +27,8 @@ public class OpenWeatherMapAPI {
      * @param lon longitude
      * @return weatherCache
      */
-    public static WeatherState[][] update(double lat, double lon){
+    public static WeatherState[][] update(double lat, double lon) throws ConnectException{
+
         String hourly_data = getJSONData(lat, lon);
 
         WeatherState[][] weatherCache = parse(hourly_data);
@@ -43,7 +45,7 @@ public class OpenWeatherMapAPI {
      * @param lon longitude: -180<=lon<=180
      * @return the JSON response in form of a string
      */
-    private static String getJSONData(double lat, double lon){
+    private static String getJSONData(double lat, double lon)throws ConnectException{
         // Sanitise:
         if (!checkCoord(lat, lon)){
             throw new IllegalArgumentException("Invalid lat/lon: " + lat + " " + lon);
@@ -64,10 +66,14 @@ public class OpenWeatherMapAPI {
                 hourly_data += Character.toString((char) iAsciiValue);
             }
         }
-
         catch(IOException e2){
             System.out.println(e2);
         }
+
+        if(hourly_data.isEmpty()){
+            throw new ConnectException("unable to connect to http://api.openweathermap.org");
+        }
+
         return hourly_data;
     }
 
@@ -316,11 +322,6 @@ public class OpenWeatherMapAPI {
                 }
             }
         }
-    }
-
-    public static void main(String[] args){
-        WeatherState[][] weatherCache = update(51.0, 0.0);
-        printCSVWeatherCache(weatherCache);
     }
 }
 

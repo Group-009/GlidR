@@ -77,7 +77,7 @@ public class WeatherApplication extends Application {
 
         //instantiate weatherInterface
         weatherInterface = new Backend(52.208816, 0.117754);
-        
+
         //Main screen
         homePage = new HomePage(primaryStage, currentTime, calendar,weatherInterface);
         mainScene = homePage.getMainScene();
