@@ -5,7 +5,6 @@ import uk.ac.cam.mcksj.WeatherState;
 import uk.ac.cam.mcksj.WeekDay;
 
 import java.io.IOException;
-import java.util.Random;
 
 
 public class Backend implements Middle {
@@ -26,26 +25,27 @@ public class Backend implements Middle {
 
     public Backend() throws IOException, NoWeatherDataException {
         rasp = new RaspAPI(51.0, 0);
-        weatherCache = new WeatherState[7][24];
+        weatherCache = new WeatherState[6][24];
         updateWeather();
     }
 
     public Backend(double lat, double lon) throws IOException, NoWeatherDataException {
         rasp = new RaspAPI(lat, lon);
-        weatherCache = new WeatherState[7][24];
+        weatherCache = new WeatherState[6][24];
         updateWeather();
     }
 
 
-    /*
-    This should take a location argument but I'm not sure
-    what format location should be in
-    Return true for successful update
+    /**
+     * Updates the weather for next 120 hours;
+     * Times before the current time on the same day will have the same weather as the current weather
+     * Times after 120 hours past the current time will contain null
+     * @return True for a successful update
      */
     public boolean updateWeather() throws IOException, NoWeatherDataException {
         weatherCache = OpenWeatherMapAPI.update(latitude, longitude);
         rasp.updateThermalData();
-        for(int dIndex = 0; dIndex < 5; dIndex++) {
+        for(int dIndex = 0; dIndex < 6; dIndex++) {
             for(int time = 0; time <= 23; time++) {
                 //TODO
                 WeekDay day = WeekDay.values()[dIndex];
@@ -83,8 +83,6 @@ public class Backend implements Middle {
 
         if(!rasp.setIK(latitude, longitude))
             return false;
-
-        WeatherState currWeatherState = new WeatherState(0,0,0,0, 0,WeekDay.MONDAY,0);
 
         return true;
     }

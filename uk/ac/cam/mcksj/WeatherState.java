@@ -3,11 +3,11 @@ package uk.ac.cam.mcksj;
 public final class WeatherState {
 
     // To-Do, update meaning comments
-    private final int starRating; //1-5;
-    private final float temperature; //1-5;
-    private final float visibility; //in km;
-    private final float rain; //chance 0-1;
-    private final float wind;
+    private final int starRating; //0-5;
+    private final float temperature; //Celsius;
+    private final float visibility; //in percentage visibility;
+    private final float rain; //in mm of rainfall in last 3 hours;
+    private final float wind; // in knots
 
     //these are here for convenience
     private final WeekDay day;

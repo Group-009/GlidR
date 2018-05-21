@@ -65,9 +65,6 @@ public class OpenWeatherMapAPI {
             }
         }
 
-        catch(MalformedURLException e1){
-            System.out.println(e1);
-        }
         catch(IOException e2){
             System.out.println(e2);
         }
@@ -141,7 +138,7 @@ public class OpenWeatherMapAPI {
                     rain = Float.valueOf(s.substring(rainIndex + 13, rainIndex + 17).replaceAll("[^0-9.]",""));
                 }
                 vis = 100.00f - Float.valueOf(s.substring(visIndex + 16, visIndex + 18).replaceAll("[^0-9.]",""));
-                wind = Float.valueOf(s.substring(windIndex + 8, windIndex + 14).replaceAll("[^0-9.]",""));
+                wind = Float.valueOf(s.substring(windIndex + 8, windIndex + 14).replaceAll("[^0-9.]",""))*1.94384f;
                 time = Integer.valueOf(s.substring(timeIndex + 20, timeIndex + 24).replaceAll("[^0-9.]",""));
                 unixTime = Integer.valueOf(s.substring(unixTimeIndex + 5, unixTimeIndex + 15).replaceAll("[^0-9.]",""));
                 unixDeltaDay = unixTime/86400-firstUnixDay;
@@ -320,11 +317,13 @@ public class OpenWeatherMapAPI {
             }
         }
     }
+
+    public static void main(String[] args){
+        WeatherState[][] weatherCache = update(51.0, 0.0);
+        printCSVWeatherCache(weatherCache);
+    }
 }
 
 // To do, Saaras:
-//  Change 0<=day<=5
-//  Refactor
 //  JSON parser
-//  Fix other parts of code
 //  Test/ debug
