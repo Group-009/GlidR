@@ -179,7 +179,7 @@ public class HomePage {
         settingsPane.setLayoutY(0);
         settingsPane.setMinSize(68,68);
         settingsPane.setMaxSize(68,68);
-        settingsPane.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/settings_option3_on.png');");
+        settingsPane.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/settings_option3_off.png');");
         settingsPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {

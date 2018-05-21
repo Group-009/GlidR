@@ -25,7 +25,7 @@ public class SettingsPage {
         settingsClose.setMinSize(68,68);
         settingsClose.setLayoutX(0);
         settingsClose.setLayoutY(0);
-        settingsClose.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/settings_option3_off.png');");
+        settingsClose.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/settings_option3_on.png');");
         settingsClose.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
