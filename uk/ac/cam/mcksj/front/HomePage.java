@@ -43,6 +43,12 @@ public class HomePage {
     private Middle weatherInterface;
     private WeatherState focusState;
 
+    /**
+     * @param primaryStage Primary Stage for switching scene
+     * @param currentHour Loads app with current time
+     * @param calendar To find current time and day
+     * @param weatherInterface To update the weather information
+     */
     public HomePage(Stage primaryStage, int currentHour, Calendar calendar, Middle weatherInterface) {
         this.weatherInterface = weatherInterface;
 
@@ -235,12 +241,14 @@ public class HomePage {
         updateNodes();
     }
 
+    //updates each weather node
     public void updateNodes() {
         for (WeatherNode node : weatherNodes) {
             node.update(focusState);
         }
     }
 
+    //greys out time buttons in the past
     public void updatePage() {
         currentHour = calendar.get(Calendar.HOUR_OF_DAY);
         for (int i = 0; i < currentHour; i++) {
