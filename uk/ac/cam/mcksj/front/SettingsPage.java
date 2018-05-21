@@ -20,6 +20,11 @@ public class SettingsPage {
     private Scene settingsScene;
     private Middle weatherInterface;
 
+    /**
+     * @param primaryStage Primary stage for switching scene to HomePage
+     * @param homePage Reference to return to the HomePage
+     * @param weatherInterface For updating location information
+     */
     public SettingsPage(Stage primaryStage, HomePage homePage, Middle weatherInterface) {
         this.weatherInterface = weatherInterface;
 
