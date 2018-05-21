@@ -24,6 +24,12 @@ public class Backend implements Middle {
 
     private RaspAPI rasp;
 
+    public Backend() throws IOException, NoWeatherDataException {
+        rasp = new RaspAPI(51.0, 0);
+        weatherCache = new WeatherState[7][24];
+        updateWeather();
+    }
+
     public Backend(double lat, double lon) throws IOException, NoWeatherDataException {
         rasp = new RaspAPI(lat, lon);
         weatherCache = new WeatherState[7][24];

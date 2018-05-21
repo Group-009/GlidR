@@ -84,7 +84,7 @@ public class RaspAPI {
                     in.close();
             }
 
-        }*/
+        }
     }
 
     /**

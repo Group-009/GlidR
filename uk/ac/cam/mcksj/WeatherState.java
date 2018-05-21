@@ -13,10 +13,20 @@ public final class WeatherState {
     private final WeekDay day;
     private final int time;
 
+    public WeatherState(){
+        this.starRating=0;
+        this.temperature=0;
+        this.visibility=100;
+        this.rain=0;
+        this.wind=0;
+        this.day=WeekDay.MONDAY;
+        this.time=0;
+    }
+
     //To-Do, update acceptable bounds
     public WeatherState(int starRating, float temperature, float visibility, float rain, float wind, WeekDay day, int time) {
         if (starRating<0||starRating>5) throw new IndexOutOfBoundsException("Invalid Star Rating");
-        if (rain<0||rain>1) throw new IndexOutOfBoundsException("Invalid Rain Chance");
+        if (rain<0) throw new IndexOutOfBoundsException("Invalid Rain Chance");
         if (time<0||time>23) throw new IndexOutOfBoundsException("Invalid Time");
         if (wind<0) throw new IndexOutOfBoundsException("Invalid Wind");
         this.starRating = starRating;
@@ -40,9 +50,7 @@ public final class WeatherState {
         return visibility;
     }
 
-    public float getRain() {
-        return rain;
-    }
+    public float getRain() { return rain; }
 
     public float getWind() { return wind; }
 
