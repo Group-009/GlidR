@@ -27,7 +27,7 @@ public class RaspAPI {
      * Indexed first by day (0=today, 1=tomorrow)
      * Indexed second by time in hours
      */
-    private int[][] thermalSpeedCache = new int[5][MAX_SUPPORTED_TIME+1];
+    private int[][] thermalSpeedCache = new int[Backend.SUPPORTED_DAYS][MAX_SUPPORTED_TIME+1];
 
     private int i, k;
 
@@ -55,13 +55,11 @@ public class RaspAPI {
      */
 
     public void updateThermalData() throws IOException, NoWeatherDataException {
-        for(int day = 0; day < 5; day++) {
-            // We start counting from today, so increment day appropriately
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.DAY_OF_MONTH, day);
+        for(int day = 0; day < Backend.SUPPORTED_DAYS; day++) {
+            int dayIndex = Backend.getWeekDay(day);
 
             // Convert int from [1..7] to string representation
-            String dayStr = WeekDay.values()[calendar.get(Calendar.DAY_OF_WEEK) - 1].toString().toLowerCase();
+            String dayStr = WeekDay.values()[dayIndex].toString().toLowerCase();
             dayStr = dayStr.substring(0, 1).toUpperCase() + dayStr.substring(1);
 
             BufferedInputStream in = null;
@@ -74,7 +72,7 @@ public class RaspAPI {
                 String thermalData = data.split("\n")[0];
 
                 // Individually read in the data at each hour
-                for(int time = 6; time <= 18; time++) {
+                for(int time = MIN_SUPPORTED_TIME; time <= MAX_SUPPORTED_TIME; time++) {
                     thermalSpeedCache[day][time] = parseThermalData(thermalData, time);
                 }
             }
