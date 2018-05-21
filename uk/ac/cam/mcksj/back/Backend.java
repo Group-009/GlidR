@@ -16,8 +16,8 @@ public class Backend implements Middle {
     public static void main(String[] args) throws IOException, NoWeatherDataException {
         Backend back = new Backend(52, 0);
         System.out.println(back.getWeather(0, 12).getStarRating());
+        OpenWeatherMapAPI.printCSVWeatherCache(back.weatherCache);
     }
-
 
     private double latitude, longitude;
 
@@ -27,12 +27,16 @@ public class Backend implements Middle {
     private RaspAPI rasp;
 
     public Backend() throws IOException, NoWeatherDataException {
-        rasp = new RaspAPI(51.0, 0);
+        longitude = 51.0;
+        latitude = 0.0;
+        rasp = new RaspAPI(51.0, 0.0);
         weatherCache = new WeatherState[6][24];
         updateWeather();
     }
 
     public Backend(double lat, double lon) throws IOException, NoWeatherDataException {
+        longitude = lon;
+        latitude = lat;
         rasp = new RaspAPI(lat, lon);
         weatherCache = new WeatherState[6][24];
         updateWeather();
