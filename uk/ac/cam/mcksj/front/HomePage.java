@@ -79,7 +79,6 @@ public class HomePage {
 
                         //select least valid time
                         if (currentTimePane < currentHour) currentTimePane = currentHour;
-                        focusState = weatherInterface.getWeather(currentDayPane, currentTimePane);
                         timePanes[currentTimePane].setColor(ColourScheme.LIGHT_GREY);
                     }
 
@@ -240,6 +239,30 @@ public class HomePage {
     //updates each weather node
     public void updateNodes() {
         focusState = weatherInterface.getWeather(currentDayPane, currentTimePane);
+
+        //If there is no weather data available at that time, go to a time where there is weather data available
+        if (focusState == null) {
+            int newTime = currentTimePane;
+            timePanes[newTime].setColor(ColourScheme.DARK_GREY);
+            int newDay = currentDayPane;
+            weekdayPanes[newDay].setColor(ColourScheme.DARK_GREY);
+            while (focusState == null && newDay >= 0) {
+                newTime--;
+                if (newTime < 0) {
+                    newTime = 23;
+                    newDay--;
+                }
+                timePanes[newTime].setColor(ColourScheme.DARK_GREY);
+                weekdayPanes[newDay].setColor(ColourScheme.DARK_GREY);
+                focusState = weatherInterface.getWeather(newDay, newTime);
+            }
+            currentTimePane = newTime;
+            currentDayPane = newDay;
+            timePanes[newTime].setColor(ColourScheme.LIGHT_GREY);
+            weekdayPanes[newDay].setColor(ColourScheme.LIGHT_GREY);
+        }
+
+
         for (WeatherNode node : weatherNodes) {
             node.update(focusState);
         }
