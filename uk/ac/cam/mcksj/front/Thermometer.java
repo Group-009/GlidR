@@ -57,25 +57,9 @@ public class Thermometer extends StackPane {
         final KeyValue lenkv = new KeyValue(line.endYProperty(), 110 - ratio * 65);
         final KeyFrame lenkf = new KeyFrame(Duration.millis(750), lenkv);
 
-        //Changing colour looks abit confusing and doesn't fit with the rest of the design
-        //Changing length seems to be enough in my opinion
-        /*
-            //Change colour of line and circle in thermometer
-            Color colour;
-            if (ratio<0.5) colour = Color.color(2 * ratio, ratio, 1-(2*ratio));
-            else colour = Color.color(1, 1-ratio, 0);
-        */
-
-        Color colour = Color.RED;
-
-        final KeyValue colLineKv = new KeyValue(line.strokeProperty(), colour);
-        final KeyFrame colLineKf = new KeyFrame(Duration.millis(750), colLineKv);
-
-        final KeyValue colCircleKv = new KeyValue(circle.fillProperty(), colour);
-        final KeyFrame colCircleKf = new KeyFrame(Duration.millis(750), colCircleKv);
 
         //Start the transitions
-        timeline.getKeyFrames().addAll(colLineKf, lenkf, colCircleKf);
+        timeline.getKeyFrames().addAll(lenkf);
         timeline.play();
     }
 }

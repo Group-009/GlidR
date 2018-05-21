@@ -96,7 +96,7 @@ public class WeatherApplication extends Application {
         primaryStage.setResizable(false);
         primaryStage.setScene(mainScene);
 
-        //without this the window itself isn't 800x480 for me, I have no ides why
+        //without this the window itself isn't 800x480 for me, I have no idea why
         primaryStage.setMinHeight(829);
         primaryStage.setMaxWidth(486);
 
