@@ -25,7 +25,7 @@ public final class WeatherState {
 
     //To-Do, update acceptable bounds
     public WeatherState(int starRating, float temperature, float visibility, float rain, float wind, WeekDay day, int time) {
-        if (starRating<0||starRating>5) throw new IndexOutOfBoundsException("Invalid Star Rating");
+        if (starRating<0||starRating>5) throw new IndexOutOfBoundsException("Invalid Star Rating " + starRating);
         if (rain<0) throw new IndexOutOfBoundsException("Invalid Rain Chance");
         if (time<0||time>23) throw new IndexOutOfBoundsException("Invalid Time");
         if (wind<0) throw new IndexOutOfBoundsException("Invalid Wind");
