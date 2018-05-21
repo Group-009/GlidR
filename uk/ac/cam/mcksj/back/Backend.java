@@ -54,19 +54,19 @@ public class Backend implements Middle {
         rasp.updateThermalData();
         for(int dIndex = 0; dIndex < 6; dIndex++) {
             for(int time = 0; time <= 23; time++) {
-                WeekDay day = WeekDay.values()[getWeekDay(dIndex)];
-
-                // TODO
-//                Random rand = new Random();
-//                float temperature = rand.nextFloat() * 30;
-//                float visibility = rand.nextFloat();
-//                float rain = rand.nextFloat();
-//                float wind = rand.nextFloat();
-//                int starRating = rand.nextInt(6);
-                //
-
-
-//                weatherCache[dIndex][time] = new WeatherState(starRating, temperature, visibility, rain, wind, day, time);
+                WeatherState state = weatherCache[dIndex][time];
+                if(state == null)
+                    continue;
+                int starRating = calculateStarRating(rasp.getThermalUpdraft(dIndex, time), state.getVisibility(), state.getWind());
+                weatherCache[dIndex][time] = new WeatherState(
+                        starRating,
+                        state.getTemperature(),
+                        state.getVisibility(),
+                        state.getRain(),
+                        state.getWind(),
+                        state.getDay(),
+                        state.getTime()
+                );
             }
         }
         return true;
@@ -106,4 +106,19 @@ public class Backend implements Middle {
         return calendar.get(Calendar.DAY_OF_WEEK) - 1;
     }
 
+
+    private static int calculateStarRating(int thermal, float visibility, float wind) {
+        // Thermals 0-bad 1000-good
+        // Visibility 0-bad 1-good
+        // Wind 0-good 26-very bad
+
+        float tNorm = thermal / 1000f;
+        float vNorm = visibility / 100f;
+        float wNorm = (26f - wind) / 26f;
+
+        if(wNorm < 0)
+            return 0;
+
+        return (int) (tNorm * vNorm * wNorm * 5f + 0.5f);
+    }
 }
