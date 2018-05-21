@@ -1,12 +1,15 @@
 package uk.ac.cam.mcksj.front;
 
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
@@ -78,7 +81,15 @@ public class SettingsPage {
         messageText.setTextAlignment(TextAlignment.CENTER);
 
         //Set Location Button
-        Pane locButton = new Pane();
+        StackPane locButton = new StackPane();
+
+        Text locButtonText = new Text();
+        locButtonText.setText("OK");
+        locButtonText.setFont(Font.font(20));
+        locButtonText.setFill(Color.WHITE);
+
+        locButton.getChildren().add(locButtonText);
+        locButton.setAlignment(Pos.CENTER);
         locButton.setPrefSize(68,68);
         locButton.setLayoutX(240-34);
         locButton.setLayoutY(360);
