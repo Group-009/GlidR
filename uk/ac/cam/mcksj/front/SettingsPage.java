@@ -3,8 +3,11 @@ package uk.ac.cam.mcksj.front;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
@@ -14,6 +17,8 @@ public class SettingsPage {
 
     private Scene settingsScene;
     private Middle weatherInterface;
+    private Image mapImage = new Image("uk/ac/cam/mcksj/img/map.png");
+    private double mapAspectRatio = mapImage.getWidth()/mapImage.getHeight();
 
     public SettingsPage(Stage primaryStage, HomePage homePage, Middle weatherInterface) {
         this.weatherInterface = weatherInterface;
@@ -35,29 +40,31 @@ public class SettingsPage {
 
         //Latitude box
         TextField latBox = new TextField();
-        latBox.setPrefWidth(50);
+        latBox.setPrefWidth(150);
         latBox.setLayoutX(240-latBox.getPrefWidth()-10);
-        latBox.setLayoutY(300);
+        latBox.setLayoutY(160);
+
 
         //Longitude box
         TextField longBox = new TextField();
-        longBox.setPrefWidth(50);
+        longBox.setPrefWidth(150);
         longBox.setLayoutX(240+10);
-        longBox.setLayoutY(300);
+        longBox.setLayoutY(160);
 
         //Message box for confirmation
         Text messageText = new Text();
         messageText.setWrappingWidth(400);
         messageText.setLayoutX(40);
-        messageText.setLayoutY(250);
+        messageText.setLayoutY(680);
+        messageText.setFill(Color.WHITE);
         messageText.setTextAlignment(TextAlignment.CENTER);
 
         //Set Location Button
         Pane locButton = new Pane();
-        locButton.setPrefSize(68,68);
-        locButton.setLayoutX(240-34);
-        locButton.setLayoutY(360);
-        locButton.setStyle("-fx-background-color: #"+ColourScheme.MIDDLE_GREY);
+        locButton.setPrefSize(320,68);
+        locButton.setLayoutX(240-locButton.getPrefWidth()/2);
+        locButton.setLayoutY(700);
+        locButton.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/settings_submit_button.png');");
         locButton.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -88,14 +95,14 @@ public class SettingsPage {
                     longBox.setText("");
                 }
 
-                locButton.setStyle("-fx-background-color: #"+ColourScheme.DARK_GREY);
+                locButton.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/settings_submit_button_pressed.png');");
             }
         });
 
         locButton.setOnMouseReleased(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                locButton.setStyle("-fx-background-color: #"+ColourScheme.MIDDLE_GREY);
+                locButton.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/settings_submit_button.png');");
             }
         });
 
@@ -104,8 +111,27 @@ public class SettingsPage {
         settingsRoot.getChildren().add(longBox);
         settingsRoot.getChildren().add(locButton);
         settingsRoot.getChildren().add(messageText);
-        settingsRoot.setStyle("-fx-background-color: #"+ColourScheme.LIGHT_GREY);
+        settingsRoot.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/settings_background.png');");
         settingsScene = new Scene(settingsRoot, 480, 800);
+
+
+        // Iteractive map for selecting latitude and longitude
+
+        ImageView map = new ImageView(mapImage);
+        map.setPreserveRatio(true);
+        map.setFitWidth(320);
+        map.setLayoutX(240-map.getFitWidth()/2);
+        map.setLayoutY(240);
+        map.addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                latBox.setText(Double.toString(59.0-9.0*event.getY()*mapAspectRatio/map.getFitWidth() ));
+                longBox.setText(Double.toString(-11.0+13.0*event.getX()/map.getFitWidth() ));
+            }
+        });
+
+
+        settingsRoot.getChildren().add(map);
     }
 
     public Scene getSettingsScene() {
