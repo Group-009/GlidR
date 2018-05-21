@@ -76,12 +76,8 @@ public class WeatherApplication extends Application {
         updateDayTime();
 
         //instantiate weatherInterface
-        weatherInterface = new Backend();
-
-        //TODO lat and long in constructor
-        //Location for Cambridge - in real app would use GPS module
-        weatherInterface.changeLocation(52.208816, 0.117754);
-
+        weatherInterface = new Backend(52.208816, 0.117754);
+        
         //Main screen
         homePage = new HomePage(primaryStage, currentTime, calendar,weatherInterface);
         mainScene = homePage.getMainScene();
