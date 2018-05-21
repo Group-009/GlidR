@@ -37,7 +37,7 @@ public class Backend implements Middle {
     Return true for successful update
      */
     public boolean updateWeather() throws IOException, NoWeatherDataException {
-        weatherCache = OpenWeatherMapAPI.update(latitude, longitude);
+        weatherCache = OpenWeatherMapAPI.update((float)latitude, (float)longitude);
         rasp.updateThermalData();
         for(int dIndex = 0; dIndex < 5; dIndex++) {
             for(int time = 0; time <= 23; time++) {

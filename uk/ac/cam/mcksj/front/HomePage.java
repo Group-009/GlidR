@@ -53,7 +53,7 @@ public class HomePage {
 
         //add weekday buttons to weekday grid
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-        for (int i = 0; i<6; i++) {
+        for (int i = 0; i<5; i++) {
             WeekdayButton button = new WeekdayButton(i, dayOfWeek);
             button.getPane().setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
@@ -113,7 +113,7 @@ public class HomePage {
                 @Override
                 public void handle(MouseEvent event) {
 
-                    if (!(currentDayPane == 0 && !time.isValidTime())) {
+                    if (!(currentDayPane == 0 && !time.isValidTime())) { //Stops you selecting times in the past
                         //update time by querying API with selectedTime and current Weekday
                         int selectedTime = time.getTime();
                         focusState = weatherInterface.getWeather(currentDayPane, selectedTime);
@@ -124,8 +124,8 @@ public class HomePage {
                         final KeyFrame kf = new KeyFrame(Duration.millis(500), kv);
                         timeline.getKeyFrames().add(kf);
 
-                        time.setColor(ColourScheme.LIGHT_GREY);
                         timePanes[currentTimePane].setColor(ColourScheme.MIDDLE_GREY);
+                        time.setColor(ColourScheme.LIGHT_GREY);
                         currentTimePane = selectedTime;
                         timeline.play();
                     }
