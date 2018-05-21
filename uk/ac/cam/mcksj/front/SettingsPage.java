@@ -4,7 +4,9 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
@@ -33,23 +35,46 @@ public class SettingsPage {
             }
         });
 
+        //Lat Text
+        Text latText = new Text();
+        latText.setText("LATITUDE:");
+        latText.setFill(Color.WHITE);
+
         //Latitude box
         TextField latBox = new TextField();
-        latBox.setPrefWidth(50);
+        latBox.setPrefWidth(100);
         latBox.setLayoutX(240-latBox.getPrefWidth()-10);
         latBox.setLayoutY(300);
 
+        //Long Text
+        Text longText = new Text();
+        longText.setText("LONGITUDE:");
+        longText.setFill(Color.WHITE);
+
         //Longitude box
         TextField longBox = new TextField();
-        longBox.setPrefWidth(50);
+        longBox.setPrefWidth(100);
         longBox.setLayoutX(240+10);
         longBox.setLayoutY(300);
 
+        //Grid for input fields and their labels
+        GridPane inputGrid = new GridPane();
+        inputGrid.setLayoutX(115);
+        inputGrid.setLayoutY(250);
+        inputGrid.setHgap(50);
+        inputGrid.setVgap(20);
+
+        inputGrid.add(longBox,1,1);
+        inputGrid.add(latBox,0,1);
+        inputGrid.add(latText,0,0);
+        inputGrid.add(longText,1,0);
+
         //Message box for confirmation
         Text messageText = new Text();
+        messageText.setFill(Color.WHITE);
         messageText.setWrappingWidth(400);
         messageText.setLayoutX(40);
-        messageText.setLayoutY(250);
+        messageText.setLayoutY(220);
         messageText.setTextAlignment(TextAlignment.CENTER);
 
         //Set Location Button
@@ -100,8 +125,7 @@ public class SettingsPage {
         });
 
         settingsRoot.getChildren().add(settingsClose);
-        settingsRoot.getChildren().add(latBox);
-        settingsRoot.getChildren().add(longBox);
+        settingsRoot.getChildren().add(inputGrid);
         settingsRoot.getChildren().add(locButton);
         settingsRoot.getChildren().add(messageText);
         settingsRoot.setStyle("-fx-background-color: #"+ColourScheme.LIGHT_GREY);

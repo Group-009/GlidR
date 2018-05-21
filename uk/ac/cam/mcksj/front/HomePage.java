@@ -207,11 +207,10 @@ public class HomePage {
         root.getChildren().add(quadGrid);
         root.getChildren().add(timeBarPane);
         root.getChildren().add(settingsPane);
-        //root.setStyle("-fx-background-color: #"+ColourScheme.LIGHT_GREY);
         if (focusState.getRain() > backgroundChangeThreshold){
-            root.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/background_storm.png');");
+            root.setStyle("-fx-background-color: #000; -fx-background-image: url('uk/ac/cam/mcksj/img/background_storm.png'); -fx-background-repeat: no-repeat;");
         } else {
-            root.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/background_sunny.png');");
+            root.setStyle("-fx-background-color: #000; -fx-background-image: url('uk/ac/cam/mcksj/img/background_sunny.png'); -fx-background-repeat: no-repeat;");
         }
 
         Group borders = new Group();
