@@ -38,6 +38,7 @@ public class WeatherApplication extends Application {
     private int currentDayIndex;
     private int currentTime;
 
+    //To load the app on the current day and time
     private void updateDayTime() {
         currentTime = calendar.get(Calendar.HOUR_OF_DAY);
         currentDayIndex = (calendar.get(Calendar.DAY_OF_WEEK)+5)%7;
@@ -70,9 +71,6 @@ public class WeatherApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
-
-
         updateDayTime();
 
         //instantiate weatherInterface
@@ -96,7 +94,7 @@ public class WeatherApplication extends Application {
         primaryStage.setResizable(false);
         primaryStage.setScene(mainScene);
 
-        //without this the window itself isn't 800x480 for me, I have no ides why
+        //without this the window itself isn't 800x480 for me, I have no idea why
         primaryStage.setMinHeight(829);
         primaryStage.setMaxWidth(486);
 

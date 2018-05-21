@@ -5,17 +5,19 @@ import uk.ac.cam.mcksj.WeatherState;
 import uk.ac.cam.mcksj.WeekDay;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Random;
 
 
 public class Backend implements Middle {
 
+    public static int SUPPORTED_DAYS = 6;
 
     public static void main(String[] args) throws IOException, NoWeatherDataException {
         Backend back = new Backend(52, 0);
         System.out.println(back.getWeather(0, 12).getStarRating());
+        OpenWeatherMapAPI.printCSVWeatherCache(back.weatherCache);
     }
-
 
     private double latitude, longitude;
 
@@ -24,37 +26,47 @@ public class Backend implements Middle {
 
     private RaspAPI rasp;
 
+    public Backend() throws IOException, NoWeatherDataException {
+        longitude = 51.0;
+        latitude = 0.0;
+        rasp = new RaspAPI(51.0, 0.0);
+        weatherCache = new WeatherState[6][24];
+        updateWeather();
+    }
+
     public Backend(double lat, double lon) throws IOException, NoWeatherDataException {
+        longitude = lon;
+        latitude = lat;
         rasp = new RaspAPI(lat, lon);
-        weatherCache = new WeatherState[7][24];
+        weatherCache = new WeatherState[6][24];
         updateWeather();
     }
 
 
-    /*
-    This should take a location argument but I'm not sure
-    what format location should be in
-    Return true for successful update
+    /**
+     * Updates the weather for next 120 hours;
+     * Times before the current time on the same day will have the same weather as the current weather
+     * Times after 120 hours past the current time will contain null
+     * @return True for a successful update
      */
     public boolean updateWeather() throws IOException, NoWeatherDataException {
-        weatherCache = OpenWeatherMapAPI.update(latitude, longitude);
+        weatherCache = OpenWeatherMapAPI.update((float)latitude, (float)longitude);
         rasp.updateThermalData();
-        for(int dIndex = 0; dIndex < 5; dIndex++) {
+        for(int dIndex = 0; dIndex < 6; dIndex++) {
             for(int time = 0; time <= 23; time++) {
-                //TODO
-                WeekDay day = WeekDay.values()[dIndex];
-
-                // TODO
-
-                float temperature = 0;
-                float visibility = 0;
-                float rain = 0;
-                float wind = 0;
-                int starRating = 0;
-                //
-
-
-                weatherCache[dIndex][time] = new WeatherState(starRating, temperature, visibility, rain, wind, day, time);
+                WeatherState state = weatherCache[dIndex][time];
+                if(state == null)
+                    continue;
+                int starRating = calculateStarRating(rasp.getThermalUpdraft(dIndex, time), state.getVisibility(), state.getWind());
+                weatherCache[dIndex][time] = new WeatherState(
+                        starRating,
+                        state.getTemperature(),
+                        state.getVisibility(),
+                        state.getRain(),
+                        state.getWind(),
+                        state.getDay(),
+                        state.getTime()
+                );
             }
         }
         return true;
@@ -78,9 +90,35 @@ public class Backend implements Middle {
         if(!rasp.setIK(latitude, longitude))
             return false;
 
-        WeatherState currWeatherState = new WeatherState(0,0,0,0, 0,WeekDay.MONDAY,0);
-
         return true;
     }
 
+    /**
+     *
+     * @param day The days ahead of where we are (0=today, 1=tomorrow)
+     * @return Day of week index
+     */
+    public static int getWeekDay(int day) {
+        // We start counting from today, so increment day appropriately
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, day);
+
+        return calendar.get(Calendar.DAY_OF_WEEK) - 1;
+    }
+
+
+    private static int calculateStarRating(int thermal, float visibility, float wind) {
+        // Thermals 0-bad 1000-good
+        // Visibility 0-bad 1-good
+        // Wind 0-good 26-very bad
+
+        float tNorm = thermal / 1000f;
+        float vNorm = visibility / 100f;
+        float wNorm = (26f - wind) / 26f;
+
+        if(wNorm < 0)
+            return 0;
+
+        return (int) (tNorm * vNorm * wNorm * 5f + 0.5f);
+    }
 }

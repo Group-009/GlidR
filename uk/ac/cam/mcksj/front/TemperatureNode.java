@@ -35,6 +35,11 @@ public class TemperatureNode extends WeatherNode {
         this.getChildren().add(box);
     }
 
+    /**
+     * Updates the temperature display
+     *
+     * @param state new weather state
+     */
     @Override
     public void update(WeatherState state) {
         //Update the text to match the temperature within the current state, and update thermometer

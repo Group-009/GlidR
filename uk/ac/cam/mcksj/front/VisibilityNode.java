@@ -40,9 +40,14 @@ public class VisibilityNode extends WeatherNode {
         this.getChildren().add(box);
     }
 
+    /**
+     * Updates the visibility display
+     *
+     * @param state new weather state
+     */
     @Override
     public void update(WeatherState state) {
         //Update the text to match current visibility
-        text.setText(new DecimalFormat("#%").format(state.getVisibility()));
+        text.setText(new DecimalFormat("#%").format(state.getVisibility()/100));
     }
 }

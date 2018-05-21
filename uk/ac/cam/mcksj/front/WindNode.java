@@ -41,6 +41,11 @@ public class WindNode extends WeatherNode {
         this.getChildren().add(box);
     }
 
+    /**
+     * Updates the wind display
+     *
+     * @param state new weather state
+     */
     @Override
     public void update(WeatherState state) {
         //Update wind speed

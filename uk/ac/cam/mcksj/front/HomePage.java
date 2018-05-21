@@ -43,6 +43,12 @@ public class HomePage {
     private Middle weatherInterface;
     private WeatherState focusState;
 
+    /**
+     * @param primaryStage Primary Stage for switching scene
+     * @param currentHour Loads app with current time
+     * @param calendar To find current time and day
+     * @param weatherInterface To update the weather information
+     */
     public HomePage(Stage primaryStage, int currentHour, Calendar calendar, Middle weatherInterface) {
         this.weatherInterface = weatherInterface;
 
@@ -53,7 +59,7 @@ public class HomePage {
 
         //add weekday buttons to weekday grid
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-        for (int i = 0; i<6; i++) {
+        for (int i = 0; i<5; i++) {
             WeekdayButton button = new WeekdayButton(i, dayOfWeek);
             button.getPane().setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
@@ -113,7 +119,7 @@ public class HomePage {
                 @Override
                 public void handle(MouseEvent event) {
 
-                    if (!(currentDayPane == 0 && !time.isValidTime())) {
+                    if (!(currentDayPane == 0 && !time.isValidTime())) { //Stops you selecting times in the past
                         //update time by querying API with selectedTime and current Weekday
                         int selectedTime = time.getTime();
                         focusState = weatherInterface.getWeather(currentDayPane, selectedTime);
@@ -124,8 +130,8 @@ public class HomePage {
                         final KeyFrame kf = new KeyFrame(Duration.millis(500), kv);
                         timeline.getKeyFrames().add(kf);
 
-                        time.setColor(ColourScheme.LIGHT_GREY);
                         timePanes[currentTimePane].setColor(ColourScheme.MIDDLE_GREY);
+                        time.setColor(ColourScheme.LIGHT_GREY);
                         currentTimePane = selectedTime;
                         timeline.play();
                     }
@@ -207,11 +213,10 @@ public class HomePage {
         root.getChildren().add(quadGrid);
         root.getChildren().add(timeBarPane);
         root.getChildren().add(settingsPane);
-        //root.setStyle("-fx-background-color: #"+ColourScheme.LIGHT_GREY);
         if (focusState.getRain() > backgroundChangeThreshold){
-            root.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/background_storm.png');");
+            root.setStyle("-fx-background-color: #000; -fx-background-image: url('uk/ac/cam/mcksj/img/background_storm.png'); -fx-background-repeat: no-repeat;");
         } else {
-            root.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/background_sunny.png');");
+            root.setStyle("-fx-background-color: #000; -fx-background-image: url('uk/ac/cam/mcksj/img/background_sunny.png'); -fx-background-repeat: no-repeat;");
         }
 
         Group borders = new Group();
@@ -236,12 +241,14 @@ public class HomePage {
         updateNodes();
     }
 
+    //updates each weather node
     public void updateNodes() {
         for (WeatherNode node : weatherNodes) {
             node.update(focusState);
         }
     }
 
+    //greys out time buttons in the past
     public void updatePage() {
         currentHour = calendar.get(Calendar.HOUR_OF_DAY);
         for (int i = 0; i < currentHour; i++) {

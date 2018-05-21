@@ -1,13 +1,17 @@
 package uk.ac.cam.mcksj.front;
 
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
@@ -20,6 +24,11 @@ public class SettingsPage {
     private Image mapImage = new Image("uk/ac/cam/mcksj/img/map.png");
     private double mapAspectRatio = mapImage.getWidth()/mapImage.getHeight();
 
+    /**
+     * @param primaryStage Primary stage for switching scene to HomePage
+     * @param homePage Reference to return to the HomePage
+     * @param weatherInterface For updating location information
+     */
     public SettingsPage(Stage primaryStage, HomePage homePage, Middle weatherInterface) {
         this.weatherInterface = weatherInterface;
 
