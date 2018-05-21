@@ -5,10 +5,13 @@ import uk.ac.cam.mcksj.WeatherState;
 import uk.ac.cam.mcksj.WeekDay;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Random;
 
 
 public class Backend implements Middle {
 
+    public static int SUPPORTED_DAYS = 6;
 
     public static void main(String[] args) throws IOException, NoWeatherDataException {
         Backend back = new Backend(52, 0);
@@ -47,20 +50,19 @@ public class Backend implements Middle {
         rasp.updateThermalData();
         for(int dIndex = 0; dIndex < 6; dIndex++) {
             for(int time = 0; time <= 23; time++) {
-                //TODO
-                WeekDay day = WeekDay.values()[dIndex];
+                WeekDay day = WeekDay.values()[getWeekDay(dIndex)];
 
                 // TODO
-
-                float temperature = 0;
-                float visibility = 0;
-                float rain = 0;
-                float wind = 0;
-                int starRating = 0;
+//                Random rand = new Random();
+//                float temperature = rand.nextFloat() * 30;
+//                float visibility = rand.nextFloat();
+//                float rain = rand.nextFloat();
+//                float wind = rand.nextFloat();
+//                int starRating = rand.nextInt(6);
                 //
 
 
-                weatherCache[dIndex][time] = new WeatherState(starRating, temperature, visibility, rain, wind, day, time);
+//                weatherCache[dIndex][time] = new WeatherState(starRating, temperature, visibility, rain, wind, day, time);
             }
         }
         return true;
@@ -85,6 +87,19 @@ public class Backend implements Middle {
             return false;
 
         return true;
+    }
+
+    /**
+     *
+     * @param day The days ahead of where we are (0=today, 1=tomorrow)
+     * @return Day of week index
+     */
+    public static int getWeekDay(int day) {
+        // We start counting from today, so increment day appropriately
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, day);
+
+        return calendar.get(Calendar.DAY_OF_WEEK) - 1;
     }
 
 }
