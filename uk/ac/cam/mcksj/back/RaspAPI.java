@@ -1,6 +1,8 @@
 package uk.ac.cam.mcksj.back;
 
 import uk.ac.cam.mcksj.WeekDay;
+import uk.ac.cam.mcksj.front.WeatherApplication;
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -81,6 +83,9 @@ public class RaspAPI {
                 if(in != null)
                     in.close();
             }
+
+            // upadte the loading bar to singnal the user what is happening
+            WeatherApplication.updateLoadingBar(((double)day+1)/6);
 
         }
     }
