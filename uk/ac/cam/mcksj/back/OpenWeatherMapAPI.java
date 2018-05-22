@@ -6,7 +6,6 @@ import uk.ac.cam.mcksj.WeekDay;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ConnectException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
@@ -205,7 +204,6 @@ public class OpenWeatherMapAPI {
      * @return pass by reference
      */
     private static void interpolateWeather(WeatherState[][] weatherCache){
-//        printCSVWeatherCache(weatherCache);
         for(int day=0; day<6; day++){
             for(int time=0; time<24; time++){
                 if (weatherCache[day][time]==null){
@@ -331,21 +329,4 @@ public class OpenWeatherMapAPI {
             }
         }
     }
-
-    public static void main(String[] args){
-        WeatherState[][] weatherCache= new WeatherState[1][1];
-
-        try {
-            weatherCache = update(51.0, 0.0);
-        }
-        catch(Exception e){
-
-        }
-        printCSVWeatherCache(weatherCache);
-
-    }
 }
-
-// To do, Saaras:
-//  JSON parser
-//  Test/ debug

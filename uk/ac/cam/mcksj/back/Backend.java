@@ -2,26 +2,14 @@ package uk.ac.cam.mcksj.back;
 
 import uk.ac.cam.mcksj.Middle;
 import uk.ac.cam.mcksj.WeatherState;
-import uk.ac.cam.mcksj.WeekDay;
 
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Random;
 
 
 public class Backend implements Middle {
 
     public static int SUPPORTED_DAYS = 6;
-
-    public static void main(String[] args) throws IOException, NoWeatherDataException {
-//        Backend back = new Backend(51.0, 1.0);
-//        back.updateWeather();
-//        back.changeLocation(52.208816, 0.117754);
-//        OpenWeatherMapAPI.printCSVWeatherCache(back.weatherCache);
-//        System.out.println();
-//        System.out.println(back.weatherCache[4][21]);
-//        System.out.println(back.getWeather(3, 23).getTemperature());
-    }
 
     private double latitude, longitude;
 
