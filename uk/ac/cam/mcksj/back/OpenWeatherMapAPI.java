@@ -247,30 +247,22 @@ public class OpenWeatherMapAPI {
                 else{
                     prevState = weatherCache[day][time-1];
                 }
-                for(int timeW=time; timeW<24; timeW++){
-                    if (weatherCache[day][timeW] != null){
-                        return calcNtileWeatherState(prevState,weatherCache[day][timeW], (timeW-time), time);
+                boolean firstPass = true;
+                for(int dayW=day; dayW<6; dayW++){
+                    int timeW;
+                    if(firstPass){
+                        timeW=time;
                     }
-                }
-                for(int dayW=day+1; dayW<6; dayW++){
-                    for(int timeW=0; timeW<24; timeW++){
+                    else{
+                        timeW=0;
+                    }
+                    for(; timeW<24; timeW++){
                         if (weatherCache[dayW][timeW] != null){
                             return calcNtileWeatherState(prevState,weatherCache[dayW][timeW], (dayW-day)*24 + (timeW-time), time);
                         }
                     }
+                    firstPass = false;
                 }
-
-//                for(int dayW=day; dayW<6; dayW++){
-//                    for(int timeW=time; timeW<24; timeW++){
-//                        if (weatherCache[dayW][timeW] != null){
-//                            return calcNtileWeatherState(prevState,weatherCache[dayW][timeW], (dayW-day)*24 + (timeW-time), time);
-//                        }
-//                    }
-//                }
-//
-//                System.out.print(day + " ");
-//                System.out.print(time + " ");
-//                System.out.println(weatherCache[day][time] != null);
                 return prevState;
             }
         }
