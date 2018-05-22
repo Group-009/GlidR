@@ -52,6 +52,6 @@ public class RainNode extends WeatherNode {
     @Override
     public void update(WeatherState state) {
         //Update the rain probability
-        text.setText(new DecimalFormat("# mm").format(state.getRain()*100));
+        text.setText(new DecimalFormat("# mm").format(state.getRain()));
     }
 }
