@@ -70,11 +70,11 @@ public class SettingsPage {
         longBox.setLayoutY(160);
 
         //LoadingBar
-        loadingBar = new Line(40, 680, 40, 680);
+        loadingBar = new Line(80, 680, 80, 680);
         loadingBar.setStrokeWidth(4);
         loadingBar.setStrokeType(StrokeType.OUTSIDE);
         loadingBar.setStrokeLineCap(StrokeLineCap.ROUND);
-        loadingBar.setStroke(Color.GREEN);
+        loadingBar.setStroke(Color.color(0.5,1,0.5));
         loadingBar.setVisible(false);
 
         //Message box for confirmation
@@ -102,7 +102,8 @@ public class SettingsPage {
                         locButton.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/settings_submit_button_pressed.png');");
                         locButton.setDisable(true);
                         loadingBar.setVisible(true);
-                        loadingBar.setEndX(40);
+                        loadingBar.setEndX(80);
+                        messageText.setText("");
 
                         String latInput = latBox.getCharacters().toString();
                         String longInput = longBox.getCharacters().toString();
@@ -186,7 +187,6 @@ public class SettingsPage {
 
         settingsRoot.getChildren().add(map);
     }
-
 
     public Scene getSettingsScene() {
         return settingsScene;
