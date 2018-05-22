@@ -94,7 +94,7 @@ public class RaspAPI {
      *
      * @param day The day that we want the data for
      * @param time The time in hours (between 06:00 and 18:00 inclusive)
-     * @return The thermal updraft for that time and day in //TODO
+     * @return The thermal updraft for that time and day in
      */
     public int getThermalUpdraft(int day, int time) throws IOException {
         if(time < MIN_SUPPORTED_TIME || time > MAX_SUPPORTED_TIME)

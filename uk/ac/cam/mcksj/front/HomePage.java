@@ -22,7 +22,7 @@ import java.util.LinkedList;
 
 public class HomePage {
 
-    private double backgroundChangeThreshold = 0.5;
+    private double backgroundChangeThreshold = 2;
 
     private LinkedList<WeatherNode> weatherNodes = new LinkedList<>();
 
@@ -42,6 +42,8 @@ public class HomePage {
 
     private Middle weatherInterface;
     private WeatherState focusState;
+
+    private Pane root;
 
     /**
      * @param primaryStage Primary Stage for switching scene
@@ -203,7 +205,7 @@ public class HomePage {
 
         //TREE BUILD
         //pane not root group so background can be set
-        Pane root = new Pane();
+        root = new Pane();
         root.getChildren().add(dayGridPane);
         root.getChildren().add(quadGrid);
         root.getChildren().add(timeBarPane);
@@ -262,6 +264,12 @@ public class HomePage {
             weekdayPanes[newDay].setColor(ColourScheme.LIGHT_GREY);
         }
 
+        //Update background
+        if (focusState.getRain() > backgroundChangeThreshold){
+            root.setStyle("-fx-background-color: #000; -fx-background-image: url('uk/ac/cam/mcksj/img/background_storm.png'); -fx-background-repeat: no-repeat;");
+        } else {
+            root.setStyle("-fx-background-color: #000; -fx-background-image: url('uk/ac/cam/mcksj/img/background_sunny.png'); -fx-background-repeat: no-repeat;");
+        }
 
         for (WeatherNode node : weatherNodes) {
             node.update(focusState);
