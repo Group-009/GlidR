@@ -1,5 +1,6 @@
 package uk.ac.cam.mcksj.front;
 
+import javafx.animation.*;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -11,10 +12,14 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import uk.ac.cam.mcksj.Middle;
 import uk.ac.cam.mcksj.back.NoWeatherDataException;
 
@@ -26,6 +31,7 @@ public class SettingsPage {
     private Middle weatherInterface;
     private Image mapImage = new Image("uk/ac/cam/mcksj/img/map.png");
     private double mapAspectRatio = mapImage.getWidth()/mapImage.getHeight();
+    private Line loadingBar;
 
     /**
      * @param primaryStage Primary stage for switching scene to HomePage
@@ -63,6 +69,14 @@ public class SettingsPage {
         longBox.setLayoutX(240+10);
         longBox.setLayoutY(160);
 
+        //LoadingBar
+        loadingBar = new Line(40, 680, 40, 680);
+        loadingBar.setStrokeWidth(4);
+        loadingBar.setStrokeType(StrokeType.OUTSIDE);
+        loadingBar.setStrokeLineCap(StrokeLineCap.ROUND);
+        loadingBar.setStroke(Color.GREEN);
+        loadingBar.setVisible(false);
+
         //Message box for confirmation
         Text messageText = new Text();
         messageText.setWrappingWidth(400);
@@ -80,48 +94,65 @@ public class SettingsPage {
         locButton.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                String latInput = latBox.getCharacters().toString();
-                String longInput = longBox.getCharacters().toString();
+                // create a new thread, so that the application doen't become unresponsive during data loading
+                Thread thread = new Thread(new Runnable(){
+
+                    public void run(){
+                        //indicate to the user that data is loading
+                        locButton.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/settings_submit_button_pressed.png');");
+                        loadingBar.setVisible(true);
+                        loadingBar.setEndX(40);
+
+                        String latInput = latBox.getCharacters().toString();
+                        String longInput = longBox.getCharacters().toString();
 
 
-                try {
-                    double latitude = Double.parseDouble(latInput);
-                    double longitude = Double.parseDouble(longInput);
-                    if (latitude < -90 || latitude > 90) throw new LocationFormatException("Latitude out of bounds");
-                    if (longitude < -180 || longitude > 180) throw new LocationFormatException("Longitude out of bounds");
+                        try {
+                            double latitude = Double.parseDouble(latInput);
+                            double longitude = Double.parseDouble(longInput);
+                            if (latitude < -90 || latitude > 90) throw new LocationFormatException("Latitude out of bounds");
+                            if (longitude < -180 || longitude > 180) throw new LocationFormatException("Longitude out of bounds");
 
-                    //call API for location update and handle false return
-                    if (!weatherInterface.changeLocation(latitude, longitude)) throw new LocationFormatException(" Invalid location");
+                            //call API for location update and handle false return
+                            if (!weatherInterface.changeLocation(latitude, longitude)) throw new LocationFormatException(" Invalid location");
 
-                    try {
-                        weatherInterface.updateWeather();
-                        //update the dials
-                        homePage.updateNodes();
-                    } catch (IOException e) {
-                        primaryStage.setScene(retryScene);
-                    } catch (NoWeatherDataException e) {
-                        throw new LocationFormatException("Invalid Location");
+                            try {
+                                weatherInterface.updateWeather();
+                                //update the dials
+                                homePage.updateNodes();
+                            } catch (IOException e) {
+                                primaryStage.setScene(retryScene);
+                            } catch (NoWeatherDataException e) {
+                                throw new LocationFormatException("Invalid Location");
+                            }
+                            messageText.setText("Location updated to: ("+latitude+", "+longitude+")");
+
+                        } catch (NumberFormatException e) {
+                            messageText.setText("Please input two numbers, one for latitude and one for longitude");
+                            latBox.setText("");
+                            longBox.setText("");
+                        } catch (LocationFormatException e) {
+                            messageText.setText("Please enter correct latitude and longitude: " + e.getMessage());
+                            latBox.setText("");
+                            longBox.setText("");
+                        }
+
+                        // return the page to the previous condition
+                        locButton.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/settings_submit_button.png');");
+                        loadingBar.setVisible(false);
                     }
-                    messageText.setText("Location updated to: ("+latitude+", "+longitude+")");
 
-                } catch (NumberFormatException e) {
-                    messageText.setText("Please input two numbers, one for latitude and one for longitude");
-                    latBox.setText("");
-                    longBox.setText("");
-                } catch (LocationFormatException e) {
-                    messageText.setText("Please enter correct latitude and longitude: " + e.getMessage());
-                    latBox.setText("");
-                    longBox.setText("");
-                }
+                });
+                thread.start();
 
-                locButton.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/settings_submit_button_pressed.png');");
+
             }
         });
 
         locButton.setOnMouseReleased(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                locButton.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/settings_submit_button.png');");
+
             }
         });
 
@@ -130,6 +161,7 @@ public class SettingsPage {
         settingsRoot.getChildren().add(longBox);
         settingsRoot.getChildren().add(locButton);
         settingsRoot.getChildren().add(messageText);
+        settingsRoot.getChildren().add(loadingBar);
         settingsRoot.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/settings_background.png');");
         settingsScene = new Scene(settingsRoot, 480, 800);
 
@@ -155,5 +187,10 @@ public class SettingsPage {
 
     public Scene getSettingsScene() {
         return settingsScene;
+    }
+
+    // upadte the loading bar during data gathering
+    public void updateLoadingBar(double ratio){
+        loadingBar.setEndX(40+ratio*400);
     }
 }

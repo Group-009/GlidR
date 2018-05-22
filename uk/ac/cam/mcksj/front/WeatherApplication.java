@@ -28,7 +28,7 @@ import java.util.Calendar;
 import java.util.LinkedList;
 
 public class WeatherApplication extends Application {
-    private SettingsPage settingsPage;
+    private static SettingsPage settingsPage;
     private HomePage homePage;
 
     private Scene mainScene;
@@ -158,6 +158,14 @@ public class WeatherApplication extends Application {
 
     public void updateNodes() {
         homePage.updateNodes();
+    }
+
+    //upadtes the loading bar during data loading
+    public static void updateLoadingBar(double ratio){
+        if (settingsPage != null){
+            settingsPage.updateLoadingBar(ratio);
+        }
+
     }
 
     //launch application
