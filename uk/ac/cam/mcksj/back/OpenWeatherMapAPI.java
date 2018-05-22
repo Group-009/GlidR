@@ -233,7 +233,9 @@ public class OpenWeatherMapAPI {
                 for(WeatherState[] dayWeather: weatherCache){
                     for(WeatherState timeWeather: dayWeather){
                         if (timeWeather != null){
-                            return timeWeather;
+                            return new WeatherState(timeWeather.getStarRating(), timeWeather.getTemperature(),
+                                    timeWeather.getVisibility(), timeWeather.getRain(), timeWeather.getWind(),
+                                    timeWeather.getDay(), time);
                         }
                     }
                 }
@@ -263,7 +265,8 @@ public class OpenWeatherMapAPI {
                     }
                     firstPass = false;
                 }
-                return prevState;
+                return new WeatherState(prevState.getStarRating(), prevState.getTemperature(),
+                        prevState.getVisibility(), prevState.getRain(), prevState.getWind(), prevState.getDay(), time);
             }
         }
     }
