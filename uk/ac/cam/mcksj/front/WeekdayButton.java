@@ -7,7 +7,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import uk.ac.cam.mcksj.WeekDay;
 
-public class WeekdayButton {
+public class WeekdayButton { //Buttons for weekday navigation
     private StackPane pane = new StackPane();
     private int barIndex;
     private String[] days = {"Su","Mo","Tu","We","Th","Fr","Sa"};
@@ -29,6 +29,7 @@ public class WeekdayButton {
         if (barIndex == 0) pane.setStyle("-fx-background-color: #"+ColourScheme.LIGHT_GREY);
     }
 
+    //To make sure that first day in bar is the current day of the week
     public void updateDayOfWeek(int dayOfWeek) {
         this.iconLabel = days[(dayOfWeek+ barIndex -1)%7];
         text.setText(this.iconLabel);

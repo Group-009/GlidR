@@ -99,12 +99,19 @@ public class Backend implements Middle {
     }
 
 
+    /**
+     *
+     * @param thermal The thermal speed parameter
+     * @param visibility Visibility parameter
+     * @param wind Wind parameter
+     * @return A average of the normalised values
+     */
     private static int calculateStarRating(int thermal, float visibility, float wind) {
-        // Thermals 0-bad 1000-good
+        // Thermals 0-bad 600-good
         // Visibility 0-bad 1-good
         // Wind 0-good 26-very bad
 
-        float tNorm = thermal / 1000f;
+        float tNorm = Math.min(thermal / 600f, 1);
         float vNorm = visibility / 100f;
         float wNorm = (26f - wind) / 26f;
 

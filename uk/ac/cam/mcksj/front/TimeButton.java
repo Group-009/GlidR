@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class TimeButton {
+public class TimeButton { //Buttons for time navigation
     private StackPane pane = new StackPane();
     private int  time;
     private boolean validTime = true;
