@@ -205,6 +205,7 @@ public class OpenWeatherMapAPI {
      * @return pass by reference
      */
     private static void interpolateWeather(WeatherState[][] weatherCache){
+//        printCSVWeatherCache(weatherCache);
         for(int day=0; day<6; day++){
             for(int time=0; time<24; time++){
                 if (weatherCache[day][time]==null){
@@ -232,7 +233,9 @@ public class OpenWeatherMapAPI {
                 for(WeatherState[] dayWeather: weatherCache){
                     for(WeatherState timeWeather: dayWeather){
                         if (timeWeather != null){
-                            return timeWeather;
+                            return new WeatherState(timeWeather.getStarRating(), timeWeather.getTemperature(),
+                                    timeWeather.getVisibility(), timeWeather.getRain(), timeWeather.getWind(),
+                                    timeWeather.getDay(), time);
                         }
                     }
                 }
@@ -246,19 +249,24 @@ public class OpenWeatherMapAPI {
                 else{
                     prevState = weatherCache[day][time-1];
                 }
-                for(int timeW=time; timeW<24;timeW++){
-                    if (weatherCache[day][timeW] != null){
-                        return calcNtileWeatherState(prevState,weatherCache[day][timeW], (timeW-time), time);
+                boolean firstPass = true;
+                for(int dayW=day; dayW<6; dayW++){
+                    int timeW;
+                    if(firstPass){
+                        timeW=time;
                     }
-                }
-                for(int dayW=day+1; dayW<6; dayW++){
-                    for(int timeW=0; timeW<24;timeW++){
+                    else{
+                        timeW=0;
+                    }
+                    for(; timeW<24; timeW++){
                         if (weatherCache[dayW][timeW] != null){
                             return calcNtileWeatherState(prevState,weatherCache[dayW][timeW], (dayW-day)*24 + (timeW-time), time);
                         }
                     }
+                    firstPass = false;
                 }
-                return null;
+                return new WeatherState(prevState.getStarRating(), prevState.getTemperature(),
+                        prevState.getVisibility(), prevState.getRain(), prevState.getWind(), prevState.getDay(), time);
             }
         }
     }
@@ -322,6 +330,19 @@ public class OpenWeatherMapAPI {
                 }
             }
         }
+    }
+
+    public static void main(String[] args){
+        WeatherState[][] weatherCache= new WeatherState[1][1];
+
+        try {
+            weatherCache = update(51.0, 0.0);
+        }
+        catch(Exception e){
+
+        }
+        printCSVWeatherCache(weatherCache);
+
     }
 }
 

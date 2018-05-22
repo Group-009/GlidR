@@ -14,11 +14,13 @@ public class Backend implements Middle {
     public static int SUPPORTED_DAYS = 6;
 
     public static void main(String[] args) throws IOException, NoWeatherDataException {
-        Backend back = new Backend();
-//        System.out.println(back.getWeather(0, 12).getStarRating());
+//        Backend back = new Backend(51.0, 1.0);
+//        back.updateWeather();
+//        back.changeLocation(52.208816, 0.117754);
 //        OpenWeatherMapAPI.printCSVWeatherCache(back.weatherCache);
-        back.changeLocation(52.208816, 0.117754);
-        System.out.println(back.getWeather(1, 22).getTemperature());
+//        System.out.println();
+//        System.out.println(back.weatherCache[4][21]);
+//        System.out.println(back.getWeather(3, 23).getTemperature());
     }
 
     private double latitude, longitude;
