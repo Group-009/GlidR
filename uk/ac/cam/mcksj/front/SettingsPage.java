@@ -70,11 +70,11 @@ public class SettingsPage {
         longBox.setLayoutY(160);
 
         //LoadingBar
-        loadingBar = new Line(40, 680, 40, 680);
+        loadingBar = new Line(80, 680, 80, 680);
         loadingBar.setStrokeWidth(4);
         loadingBar.setStrokeType(StrokeType.OUTSIDE);
         loadingBar.setStrokeLineCap(StrokeLineCap.ROUND);
-        loadingBar.setStroke(Color.GREEN);
+        loadingBar.setStroke(Color.color(0.5,1,0.5));
         loadingBar.setVisible(false);
 
         //Message box for confirmation
@@ -101,7 +101,8 @@ public class SettingsPage {
                         //indicate to the user that data is loading
                         locButton.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/settings_submit_button_pressed.png');");
                         loadingBar.setVisible(true);
-                        loadingBar.setEndX(40);
+                        loadingBar.setEndX(80);
+                        messageText.setText("");
 
                         String latInput = latBox.getCharacters().toString();
                         String longInput = longBox.getCharacters().toString();
@@ -191,6 +192,6 @@ public class SettingsPage {
 
     // upadte the loading bar during data gathering
     public void updateLoadingBar(double ratio){
-        loadingBar.setEndX(40+ratio*400);
+        loadingBar.setEndX(80+ratio*320);
     }
 }
