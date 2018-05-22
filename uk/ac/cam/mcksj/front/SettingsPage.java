@@ -100,6 +100,7 @@ public class SettingsPage {
                     public void run(){
                         //indicate to the user that data is loading
                         locButton.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/settings_submit_button_pressed.png');");
+                        locButton.setDisable(true);
                         loadingBar.setVisible(true);
                         loadingBar.setEndX(40);
 
@@ -139,6 +140,7 @@ public class SettingsPage {
 
                         // return the page to the previous condition
                         locButton.setStyle("-fx-background-image: url('uk/ac/cam/mcksj/img/settings_submit_button.png');");
+                        locButton.setDisable(false);
                         loadingBar.setVisible(false);
                     }
 
@@ -185,12 +187,17 @@ public class SettingsPage {
         settingsRoot.getChildren().add(map);
     }
 
+
     public Scene getSettingsScene() {
         return settingsScene;
     }
 
-    // upadte the loading bar during data gathering
+    // update the loading bar during data gathering
     public void updateLoadingBar(double ratio){
-        loadingBar.setEndX(40+ratio*400);
+        final Timeline timeline = new Timeline();
+        final KeyValue lenkv = new KeyValue(loadingBar.endXProperty(), 40+ratio*400);
+        final KeyFrame lenkf = new KeyFrame(Duration.millis(500), lenkv);
+        timeline.getKeyFrames().addAll(lenkf);
+        timeline.play();
     }
 }
