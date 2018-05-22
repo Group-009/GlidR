@@ -118,8 +118,6 @@ public class Backend implements Middle {
         if(wNorm < 0)
             return 0;
 
-        System.out.println((int) ((tNorm + vNorm + wNorm) / 3f * 5f + 0.5f));
-
         return (int) ((tNorm + vNorm + wNorm) / 3f * 5f + 0.5f);
     }
 }
