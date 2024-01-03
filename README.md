@@ -27,7 +27,7 @@ Either use the .jar file, or import the project into you IDE. The main class is 
 * **Keir Lewis** - *Frontend development* - [KL484](https://github.com/KL484)
 * **Charlie Maclean** - *Frontend development* - [c-h-a-r-l-i-e](https://github.com/c-h-a-r-l-i-e)
 * **Saaras Mehan** - *Backend development* - [SaarasM](https://github.com/SaarasM)
-* **Mikey Matthews** - *Backend development* - [Ryxuma](https://github.com/Ryxuma)
+* **Mikey Matthews** - *Backend development* - [MichaelTMatthews](https://github.com/MichaelTMatthews)
 * **Jakub Mach** - *Graphics and development* - [kvubo02](https://github.com/kvubo02)
 
 See also the list of [contributors](https://github.com/Group-009/GlidR/graphs/contributors) who participated in this project.
